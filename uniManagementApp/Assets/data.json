@@ -1,0 +1,38 @@
+{
+    "subjects":
+    {
+        "1": {
+            "name": "Math",
+            "description": "Mathematics is the study of numbers, shapes and patterns.",
+            "teacherId": 1,
+            "studentsEnrolled":
+            [
+                1
+            ]
+        }
+    },
+    "students":
+    {
+        "1": {
+            "name": "John",
+            "username": "john123",
+            "password": "john123",
+            "enrolledSubjects":
+            [
+                1
+            ]
+        }
+    },
+    "teachers":
+    {
+        "1": {
+            "name": "Mr. Smith",
+            "username": "smith123",
+            "password": "smith123",
+            "subjects":
+            [
+                1
+            ]
+        }
+    }
+}
