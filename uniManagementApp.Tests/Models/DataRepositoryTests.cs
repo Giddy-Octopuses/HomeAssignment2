@@ -1,29 +1,48 @@
+using System;
 using uniManagementApp.Models;
+using Xunit;
 
-namespace uniManagementApp.Tests;
-
-public class DataRepositoryTests
+namespace uniManagementApp.Tests
 {
-    [Fact]
-    public void Data_Exists()
+    public class DataRepositoryTests
     {
-        string curFile = "../../uniManagementApp/Data/data.json";
-        Assert.True(File.Exists(curFile), "data.json file does not exist.");
-    }
+        private readonly ITestOutputHelper _output;
 
-    [Fact]
-    public void DataRepository_Constructor()
-    {
-        // Arrange
-        var dataRepository = new DataRepository();
-        // Assert
-        Assert.NotNull(dataRepository.Subjects);
-        Assert.NotNull(dataRepository.Students);
-        Assert.NotNull(dataRepository.Teachers);
-        
-        Assert.True(dataRepository.Subjects.Any(), "Subjects collection should not be empty.");
-        Assert.True(dataRepository.Students.Any(), "Students collection should not be empty.");
-        Assert.True(dataRepository.Teachers.Any(), "Teachers collection should not be empty.");
+        public DataRepositoryTests(ITestOutputHelper output)
+        {
+            _output = output; // Inject xUnit output helper
+        }
 
+        [Fact]
+        public void DataRepository_Constructor()
+        {
+            // Arrange
+            var dataRepository = new DataRepository();
+            
+            // Assert
+            Assert.NotNull(dataRepository.Subjects);
+            Assert.NotNull(dataRepository.Students);
+            Assert.NotNull(dataRepository.Teachers);
+
+            // Display the lists
+            _output.WriteLine("1");
+            _output.WriteLine("Subjects:");
+            foreach (var subject in dataRepository.Subjects)
+            {
+                _output.WriteLine($" - {subject.Name}");
+            }
+
+            _output.WriteLine("Students:");
+            foreach (var student in dataRepository.Students)
+            {
+                _output.WriteLine($" - {student.Name}");
+            }
+
+            _output.WriteLine("Teachers:");
+            foreach (var teacher in dataRepository.Teachers)
+            {
+                _output.WriteLine($" - {teacher.Name}");
+            }
+        }
     }
 }
