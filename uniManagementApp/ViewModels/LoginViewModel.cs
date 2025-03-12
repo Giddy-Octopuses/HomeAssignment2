@@ -1,6 +1,97 @@
+using System;
+using uniManagementApp.Models;
+
 namespace uniManagementApp.ViewModels;
 
 public partial class LoginViewModel : ViewModelBase
 {
-    public string Greeting { get; } = "Welcome to Avalonia!";
+    private string _username = string.Empty;
+    private string _password = string.Empty;
+    private string _errorMessage = string.Empty;
+    private bool _isStudent = true; // Default selection
+    private bool _isTeacher = false;
+    private DataRepository dataRepository = new DataRepository();
+
+    public string Username
+    {
+        get => _username;
+        set => SetProperty(ref _username, value);
+    }
+
+    public string Password
+    {
+        get => _password;
+        set => SetProperty(ref _password, value);
+    }
+
+    public string ErrorMessage
+    {
+        get => _errorMessage;
+        set => SetProperty(ref _errorMessage, value);
+    }
+
+    public bool IsStudent
+    {
+        get => _isStudent;
+        set
+        {
+            if (SetProperty(ref _isStudent, value) && value)
+            {
+                IsTeacher = false; // Ensure only one is selected
+        }
+    }
+    }
+
+    public bool IsTeacher
+    {
+        get => _isTeacher;
+        set
+        {
+            if (SetProperty(ref _isTeacher, value) && value)
+            {
+                IsStudent = false; // Ensure only one is selected
+            }
+        }
+    }
+
+    public event Action? OnLoginSuccess;
+    public void Login()
+    {
+        ErrorMessage = string.Empty;
+        if (Username != "" && Password != "" && (IsStudent || IsTeacher))
+        {
+            ErrorMessage = "";
+
+            if (IsStudent)
+            {
+                foreach (var student in dataRepository.Students)
+                {
+                    ErrorMessage = $"Welcome, {student.Name}!";
+                    if (student.Username == Username && student.Password == Password)
+                    {
+                        ErrorMessage = $"Welcome, {student.Name}!";
+                        break;
+                    }
+                }
+                
+            }
+            else if (IsTeacher)
+            {
+                foreach (var teacher in dataRepository.Teachers)
+                {
+                    if (teacher.Username == Username && teacher.Password == Password)
+                    {
+                        ErrorMessage = $"Welcome, {teacher.Name}!";
+                        break;
+                    }
+                }
+            }
+
+            OnLoginSuccess?.Invoke(); // Notify parent ViewModel
+        }
+        else
+        {
+            ErrorMessage = "Insufficient input!";
+        }
+    }
 }
