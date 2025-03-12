@@ -10,7 +10,7 @@ public partial class LoginViewModel : ViewModelBase
     private string _errorMessage = string.Empty;
     private bool _isStudent = true; // Default selection
     private bool _isTeacher = false;
-    private DataRepository dataRepository = new DataRepository();
+    public IDataRepository dataRepository = new DataRepository();
 
     public string Username
     {
@@ -33,13 +33,27 @@ public partial class LoginViewModel : ViewModelBase
     public bool IsStudent
     {
         get => _isStudent;
-        set => SetProperty(ref _isStudent, value);
+        set 
+        {
+            SetProperty(ref _isStudent, value);
+            if (value)
+            {
+                IsTeacher = false;
+            }
+        }
     }
 
     public bool IsTeacher
     {
         get => _isTeacher;
-        set => SetProperty(ref _isTeacher, value);
+        set 
+        {
+            SetProperty(ref _isTeacher, value);
+            if (value)
+            {
+                IsStudent = false;
+            }
+        }
     }
 
     public void Login()
@@ -80,7 +94,7 @@ public partial class LoginViewModel : ViewModelBase
         }
         else
         {
-            ErrorMessage = "Insufficient input!";
+            ErrorMessage = "Please fill in all fields.";
         }
     }
 }
