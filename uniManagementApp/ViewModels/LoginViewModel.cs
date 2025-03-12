@@ -33,28 +33,15 @@ public partial class LoginViewModel : ViewModelBase
     public bool IsStudent
     {
         get => _isStudent;
-        set
-        {
-            if (SetProperty(ref _isStudent, value) && value)
-            {
-                IsTeacher = false; // Ensure only one is selected
-        }
-    }
+        set => SetProperty(ref _isStudent, value);
     }
 
     public bool IsTeacher
     {
         get => _isTeacher;
-        set
-        {
-            if (SetProperty(ref _isTeacher, value) && value)
-            {
-                IsStudent = false; // Ensure only one is selected
-            }
-        }
+        set => SetProperty(ref _isTeacher, value);
     }
 
-    public event Action? OnLoginSuccess;
     public void Login()
     {
         ErrorMessage = string.Empty;
@@ -66,11 +53,11 @@ public partial class LoginViewModel : ViewModelBase
             {
                 foreach (var student in dataRepository.Students)
                 {
-                    ErrorMessage = $"Welcome, {student.Name}!";
                     if (student.Username == Username && student.Password == Password)
                     {
                         ErrorMessage = $"Welcome, {student.Name}!";
-                        break;
+                        // Navigate to student view
+                        return;
                     }
                 }
                 
@@ -82,12 +69,14 @@ public partial class LoginViewModel : ViewModelBase
                     if (teacher.Username == Username && teacher.Password == Password)
                     {
                         ErrorMessage = $"Welcome, {teacher.Name}!";
-                        break;
+                        // Navigate to teacher view
+                        return;
                     }
                 }
             }
 
-            OnLoginSuccess?.Invoke(); // Notify parent ViewModel
+            ErrorMessage = "Invalid username or password!";
+
         }
         else
         {
