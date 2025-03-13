@@ -8,8 +8,7 @@ public partial class LoginView : UserControl
     {
         public LoginView()
         {
-            InitializeComponent(); // This should work now
-            DataContext = new LoginViewModel();
+            InitializeComponent();
         }
 
         private void LoginButton_Click(object? sender, RoutedEventArgs e)
