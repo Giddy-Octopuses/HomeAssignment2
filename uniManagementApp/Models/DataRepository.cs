@@ -6,7 +6,7 @@ using System.Text.Json;
 
 namespace uniManagementApp.Models
 {
-    public class DataRepository
+    public class DataRepository : IDataRepository
     {
         private string DataFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "data.json");
 
