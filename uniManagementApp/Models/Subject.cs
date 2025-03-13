@@ -10,11 +10,12 @@ public class Subject
     public int TeacherId { get; private set; }
     public List<int>? StudentsEnrolled { get; set; }
 
-    public Subject(int id, string name, string description, int teacherId)
+    public Subject(int id, string name, string description, int teacherId, List<int>? studentsEnrolled = null)
     {
         Id = id;
         Name = name;
         Description = description;
         TeacherId = teacherId;
+        StudentsEnrolled = studentsEnrolled;
     }
 }
