@@ -28,6 +28,7 @@ public partial class MainWindowViewModel : ViewModelBase
         CurrentView = _teacherView;
     }
 
+    [RelayCommand]
     public void NavigateToStudentView()
     {
         CurrentView = _studentView;
