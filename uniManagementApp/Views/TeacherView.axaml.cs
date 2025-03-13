@@ -7,5 +7,6 @@ public partial class TeacherView : Window
     public TeacherView()
     {
         InitializeComponent();
+        DataContext = new TeacherViewModel();
     }
 }

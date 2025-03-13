@@ -7,7 +7,7 @@
         x:Class="uniManagementApp.Views.TeacherView"
         x:DataType="vm:TeacherViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="uniManagementApp">
+        Title="Teacher View">
 
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
@@ -15,6 +15,25 @@
         <vm:TeacherViewModel/>
     </Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    <StackPanel>
+        <TextBlock>My Subjects</TextBlock>
+        <ListBox Name="MySubjectsListBox" ItemsSource="{Binding MySubjects}" SelectedItem="{Binding SelectedSubject, Mode=TwoWay}" SelectionMode="Single,Toggle"/>
+        <StackPanel x:Name="ViewExistingSubject">
+            <TextBlock>ID: BINDING MISSING</TextBlock>
+            <TextBlock>Name: BINDING MISSING</TextBlock>
+            <TextBlock>Description: BINDING MISSING</TextBlock>
+            <Button Command="{Binding EditSubject}">Edit</Button> <!-- method missing -->
+            <Button Command="{Binding DeleteSubject}">Delete</Button>
+        </StackPanel>
+        <Button Command="{Binding CreateSubject}">Create new subject</Button>  <!-- method missing -->
+        <StackPanel x:Name="CreateNewSubject">
+            <TextBlock>Enter subject details:</TextBlock>
+            <TextBlock>Name:</TextBlock>
+            <TextBox Watermark="Enter the name of the subject"/>
+            <TextBlock>Short description:</TextBlock>
+            <TextBox Watermark="Enter a short description of the sunbject" Height="80" AcceptsReturn="True" TextWrapping="Wrap"/>
+            <Button Command="{Binding AddSubject}">Save</Button>
+        </StackPanel>      
+    </StackPanel>    
 
 </Window>
