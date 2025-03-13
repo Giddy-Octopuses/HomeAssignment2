@@ -8,7 +8,7 @@ namespace uniManagementApp.Models
 {
     public class DataRepository
     {
-        private string DataFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "data.json");
+        public string DataFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "data.json");
 
         public ObservableCollection<Subject> Subjects { get; private set; } = new();
         public ObservableCollection<Student> Students { get; private set; } = new();
@@ -42,6 +42,66 @@ namespace uniManagementApp.Models
             {
                 Console.WriteLine($"Error loading data: {ex.Message}");
             }
+        }
+
+        public void SaveData()
+        {
+            try
+            {
+                JsonData.Subjects = new List<Subject>(Subjects);
+                JsonData.Students = new List<Student>(Students);
+                JsonData.Teachers = new List<Teacher>(Teachers);
+
+                var json = JsonSerializer.Serialize(JsonData, new JsonSerializerOptions { WriteIndented = true });
+                File.WriteAllText(DataFilePath, json);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving data: {ex.Message}");
+            }
+        }
+
+        public Teacher findTeacher(string username, string password)
+        {
+            foreach (Teacher teacher in Teachers)
+            {
+                if (teacher.Username == username && teacher.Password == password)
+                {
+                    return teacher;
+                }
+            }
+            return null;
+        }
+
+        public Student findStudent(string username, string password)
+        {
+            foreach (Student student in Students)
+            {
+                if (student.Username == username && student.Password == password)
+                {
+                    return student;
+                }
+            }
+            return null;
+        }
+
+        public Subject findSubject(int id)
+        {
+            foreach (Subject subject in Subjects)
+            {
+                if (subject.Id == id)
+                {
+                    return subject;
+                }
+            }
+            return null;
+        }
+
+        public void CreateSubject(Teacher teacher, Subject subject)
+        {
+            Subjects.Add(subject);
+            teacher.Subjects.Add(subject.Id);
+            SaveData();
         }
     }
 
