@@ -6,9 +6,9 @@ using System.Text.Json;
 
 namespace uniManagementApp.Models
 {
-    public class DataRepository
+    public class DataRepository : IDataRepository
     {
-        private const string DataFilePath = "../net9.0/Assets/data.json";
+        private string DataFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "data.json");
 
         public ObservableCollection<Subject> Subjects { get; private set; } = new();
         public ObservableCollection<Student> Students { get; private set; } = new();
@@ -34,11 +34,9 @@ namespace uniManagementApp.Models
                 JsonData = JsonSerializer.Deserialize<JsonDataStructure>(json) ?? new JsonDataStructure();
 
                 // Ensure collections are properly initialized
-                Subjects = new ObservableCollection<Subject>(JsonData.Subjects != null ? JsonData.Subjects.Values : new List<Subject>());
-                Students = new ObservableCollection<Student>(JsonData.Students != null ? JsonData.Students.Values : new List<Student>());
-                Teachers = new ObservableCollection<Teacher>(JsonData.Teachers != null ? JsonData.Teachers.Values : new List<Teacher>());
-                var subjectlist = JsonSerializer.Deserialize<List<Subject>>(json);
-                Subjects = new ObservableCollection<Subject>(subjectlist ?? new List<Subject>());
+                Subjects = new ObservableCollection<Subject>(JsonData.Subjects ?? new List<Subject>());
+                Students = new ObservableCollection<Student>(JsonData.Students ?? new List<Student>());
+                Teachers = new ObservableCollection<Teacher>(JsonData.Teachers ?? new List<Teacher>());
             }
             catch (Exception ex)
             {
@@ -49,9 +47,9 @@ namespace uniManagementApp.Models
 
     public class JsonDataStructure
     {
-        public Dictionary<string, Subject>? Subjects { get; set; }
-        public Dictionary<string, Student>? Students { get; set; }
-        public Dictionary<string, Teacher>? Teachers { get; set; }
+        public List<Subject>? Subjects { get; set; }
+        public List<Student>? Students { get; set; }
+        public List<Teacher>? Teachers { get; set; }
     }
 
 }
