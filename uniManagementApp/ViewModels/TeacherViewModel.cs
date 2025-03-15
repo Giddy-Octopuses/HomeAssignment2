@@ -18,11 +18,11 @@ public partial class TeacherViewModel : ViewModelBase
     [ObservableProperty]
     private string? newSubjectDescription;
 
-    private Subject? _selectedItem;
-    public Subject? SelectedItem
+    private Subject? _selectedSubject;
+    public Subject? SelectedSubject
     {
-        get => _selectedItem;
-        set => SetProperty(ref _selectedItem, value);
+        get => _selectedSubject;
+        set => SetProperty(ref _selectedSubject, value);
     }
 
     [RelayCommand]
