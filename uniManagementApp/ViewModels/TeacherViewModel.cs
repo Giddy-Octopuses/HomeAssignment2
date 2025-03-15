@@ -1,7 +1,14 @@
+using uniManagementApp.Models;
 namespace uniManagementApp.ViewModels;
 
 public partial class TeacherViewModel : ViewModelBase
 {
+    public Teacher Teacher { get; }
+    public TeacherViewModel(Teacher teacher)
+    {
+        Teacher = teacher;
+    }
+    
     // (?) private List<int> MySubjects = Models.Teacher.Subjects; 
 
     public TeacherViewModel()
@@ -47,5 +54,4 @@ public partial class TeacherViewModel : ViewModelBase
             SelectedItem = null; // Clear the selection
         }
     }
-
 }

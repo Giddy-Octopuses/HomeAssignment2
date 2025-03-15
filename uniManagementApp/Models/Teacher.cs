@@ -8,13 +8,14 @@ public class Teacher
     public string Name { get; set;}
     public string Username { get; set;}
     public string Password { get; set;}
-    public List<int> Subjects { get; set; } = []; 
+    public List<int>? Subjects { get; set; } = []; 
 
-    public Teacher(int id, string name, string username, string password)
+    public Teacher(int id, string name, string username, string password, List<int>? subjects = null)
     {
         Id = id;
         Name = name;
         Username = username;
         Password = password;
+        Subjects = subjects;
     }
 }    

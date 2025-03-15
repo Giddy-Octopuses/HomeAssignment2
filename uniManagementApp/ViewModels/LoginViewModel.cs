@@ -12,6 +12,10 @@ public partial class LoginViewModel : ViewModelBase
     private bool _isTeacher = false;
     public IDataRepository dataRepository = new DataRepository();
 
+    // Navigation Actions
+    public Action<Student>? NavigateToStudentView { get; set; }
+    public Action<Teacher>? NavigateToTeacherView { get; set; }
+
     public string Username
     {
         get => _username;
@@ -70,7 +74,7 @@ public partial class LoginViewModel : ViewModelBase
                     if (student.Username == Username && student.Password == Password)
                     {
                         ErrorMessage = $"Welcome, {student.Name}!";
-                        // Navigate to student view
+                        NavigateToStudentView?.Invoke(student);
                         return;
                     }
                 }
@@ -83,7 +87,7 @@ public partial class LoginViewModel : ViewModelBase
                     if (teacher.Username == Username && teacher.Password == Password)
                     {
                         ErrorMessage = $"Welcome, {teacher.Name}!";
-                        // Navigate to teacher view
+                        NavigateToTeacherView?.Invoke(teacher);
                         return;
                     }
                 }
