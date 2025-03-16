@@ -61,7 +61,7 @@ namespace uniManagementApp.Models
             }
         }
 
-        public Teacher FindTeacher(string username, string password)
+        public Teacher? FindTeacher(string username, string password)
         {
             foreach (Teacher teacher in Teachers)
             {
@@ -73,7 +73,7 @@ namespace uniManagementApp.Models
             return null;
         }
 
-        public Student FindStudent(string username, string password)
+        public Student? FindStudent(string username, string password)
         {
             foreach (Student student in Students)
             {
@@ -85,7 +85,7 @@ namespace uniManagementApp.Models
             return null;
         }
 
-        public Subject FindSubject(int id)
+        public Subject? FindSubject(int id)
         {
             foreach (Subject subject in Subjects)
             {

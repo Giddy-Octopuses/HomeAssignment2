@@ -12,8 +12,8 @@ public partial class MainWindowViewModel : ViewModelBase
     private UserControl currentView;
 
     private LoginView _loginView = new LoginView{DataContext = new LoginViewModel()};
-    private TeacherView _teacherView;
-    private StudentView _studentView;
+    private TeacherView? _teacherView;
+    private StudentView? _studentView;
 
     public MainWindowViewModel()
     {
