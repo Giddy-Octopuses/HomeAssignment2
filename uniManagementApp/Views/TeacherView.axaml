@@ -1,10 +1,14 @@
 <UserControl xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:uniManagementApp.ViewModels"
-        x:Class="uniManagementApp.Views.TeacherView"
-        x:DataType="vm:TeacherViewModel"
-        Icon="/Assets/avalonia-logo.ico"
-        Title="Teacher View">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:uniManagementApp.ViewModels"
+             xmlns:local="clr-namespace:uniManagementApp.ViewModels"
+             x:Class="uniManagementApp.Views.TeacherView"
+             x:DataType="vm:TeacherViewModel">
+
+    <UserControl.Resources>
+        <local:SubjectsConverter x:Key="SubjectsConverter"/>
+        <local:NullToBoolConverter x:Key="NullToBoolConverter"/>
+    </UserControl.Resources>
 
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
@@ -13,16 +17,41 @@
     </Design.DataContext>
 
     <StackPanel>
+        <TextBlock Text = "{Binding Teacher.Name}"/>
+        <TextBlock Text = "{Binding Teacher.Subjects, Converter={StaticResource SubjectsConverter}}"/>
+        <TextBlock>HERE STARTS THE ACTUAL WINDOW</TextBlock>
         <TextBlock>My Subjects</TextBlock>
+        <ListBox Name="MySubjectsListBox" ItemsSource="{Binding Teacher.Subjects}" SelectedItem="{Binding SelectedSubject}" SelectionMode="Single,Toggle"/>
+        <!-- REMEMBER: the name of the subject should show instead of the id -->
+        <StackPanel x:Name="ViewExistingSubject"> <!-- IsVisible="{Binding SelectedSubject, Converter={StaticResource NullToBoolConverter}}" -->
+            <TextBlock>Subject details:</TextBlock>
+            <TextBlock>
+                <Run FontWeight="Bold" Text="ID: " />
+                <Run Text="{Binding SelectedSubject.Id}" />
+            </TextBlock>
+            <TextBlock>
+                <Run FontWeight="Bold" Text="Name: " />
+                <Run Text="{Binding SelectedSubject.Name}" />
+            </TextBlock>
+            <TextBlock>
+                <Run FontWeight="Bold" Text="Description: " />
+                <Run Text="{Binding SelectedSubject.Description}" />
+            </TextBlock>
+        </StackPanel>    
+    </StackPanel>
+
+</UserControl>
+    <!--
+    <StackPanel>
         <ListBox Name="MySubjectsListBox" ItemsSource="{Binding MySubjects}" SelectedItem="{Binding SelectedSubject, Mode=TwoWay}" SelectionMode="Single,Toggle"/>
         <StackPanel x:Name="ViewExistingSubject">
             <TextBlock>ID: BINDING MISSING</TextBlock>
             <TextBlock>Name: BINDING MISSING</TextBlock>
             <TextBlock>Description: BINDING MISSING</TextBlock>
-            <Button Command="{Binding EditSubject}">Edit</Button> <!-- method missing -->
+            <Button Command="{Binding EditSubject}">Edit</Button>  method missing 
             <Button Command="{Binding DeleteSubject}">Delete</Button>
         </StackPanel>
-        <Button Command="{Binding CreateSubject}">Create new subject</Button>  <!-- method missing -->
+        <Button Command="{Binding CreateSubject}">Create new subject</Button>   method missing 
         <StackPanel x:Name="CreateNewSubject">
             <TextBlock>Enter subject details:</TextBlock>
             <TextBlock>Name:</TextBlock>
@@ -31,6 +60,6 @@
             <TextBox Watermark="Enter a short description of the sunbject" Height="80" AcceptsReturn="True" TextWrapping="Wrap"/>
             <Button Command="{Binding AddSubject}">Save</Button>
         </StackPanel>      
-    </StackPanel> 
+    </StackPanel> -->
 
-</UserControl>
+
