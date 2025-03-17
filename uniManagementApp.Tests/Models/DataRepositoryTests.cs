@@ -6,43 +6,24 @@ namespace uniManagementApp.Tests
 {
     public class DataRepositoryTests
     {
-        // redo with IDataRepository
-        private readonly ITestOutputHelper _output;
 
-        public DataRepositoryTests(ITestOutputHelper output)
-        {
-            _output = output; // Inject xUnit output helper
-        }
+        private const string ValidJson = @"{ ""Subjects"": [{ ""Id"": 1, ""Name"": ""Math"", ""Description"": ""Mathematics is the study of numbers, shapes and patterns."", ""TeacherId"": 1, ""StudentsEnrolled"": [1] }], 
+                                            ""Students"": [{ ""Id"": 1, ""Name"": ""John"", ""Username"": ""john123"", ""Password"": ""john123"", ""EnrolledSubjects"": [1] }, { ""Id"": 2, ""Name"": ""Jane"", ""Username"": ""jane123"", ""Password"": ""jane123"", ""EnrolledSubjects"": [] }], 
+                                            ""Teachers"": [{ ""Id"": 1, ""Name"": ""Mr. Smith"", ""Username"": ""smith123"", ""Password"": ""smith123"", ""Subjects"": [1] }] }";
 
         [Fact]
         public void DataRepository_Constructor()
         {
             // Arrange
             var dataRepository = new DataRepository();
+            var filePath = "test.json";
+            File.WriteAllText(filePath, ValidJson);
+            dataRepository.LoadData(filePath);
             
             // Assert
             Assert.NotNull(dataRepository.Subjects);
             Assert.NotNull(dataRepository.Students);
             Assert.NotNull(dataRepository.Teachers);
-
-            // Display the lists
-            _output.WriteLine("Subjects:");
-            foreach (var subject in dataRepository.Subjects)
-            {
-                _output.WriteLine($" - {subject.Name}");
-            }
-
-            _output.WriteLine("Students:");
-            foreach (var student in dataRepository.Students)
-            {
-                _output.WriteLine($" - {student.Name}");
-            }
-
-            _output.WriteLine("Teachers:");
-            foreach (var teacher in dataRepository.Teachers)
-            {
-                _output.WriteLine($" - {teacher.Subjects[0]}");
-            }
         }
 
         [Fact]
@@ -50,6 +31,10 @@ namespace uniManagementApp.Tests
         {
             // Arrange
             var dataRepository = new DataRepository();
+            var filePath = "test.json";
+            File.WriteAllText(filePath, ValidJson);
+            dataRepository.LoadData(filePath);
+
             var subject = new Subject(1, "Math", "Mathematics", 1);
             dataRepository.Subjects.Add(subject);
 
@@ -65,6 +50,10 @@ namespace uniManagementApp.Tests
         {
             // Arrange
             var dataRepository = new DataRepository();
+            var filePath = "test.json";
+            File.WriteAllText(filePath, ValidJson);
+            dataRepository.LoadData(filePath);
+
             var teacher = new Teacher(1, "John Doe", "johndoe", "password", []);
             dataRepository.Teachers.Add(teacher);
 
