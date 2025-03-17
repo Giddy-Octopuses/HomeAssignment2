@@ -3,36 +3,36 @@
              xmlns:vm="using:uniManagementApp.ViewModels"
              x:Class="uniManagementApp.Views.StudentView"
              x:DataType="vm:StudentViewModel">
-  
-    <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:StudentViewModel/>
-    </Design.DataContext>
-
-    <StackPanel>
-        <TextBlock>My Subjects</TextBlock>
+    
+    <TabControl>
+        <!-- Enrolled Subjects Tab -->
+        <TabItem Header="Enrolled Subjects">
+            <StackPanel>
+                <ListBox ItemsSource="{Binding EnrolledSubjects}" SelectedItem="{Binding SelectedSubject}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}"/>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <TextBlock Text="{Binding SubjectDetails}"/>
+                <Button Content="Drop" Command="{Binding DropSubjectCommand}" IsEnabled="{Binding SelectedSubject}"/>
+            </StackPanel>
+        </TabItem>
         
-        <!-- ListBox for enrolled subjects -->
-        <ListBox Name="MySubjectsListBox" ItemsSource="{Binding EnrolledSubjects}" SelectedItem="{Binding SelectedSubject, Mode=TwoWay}" SelectionMode="Single" />
-
-        <StackPanel x:Name="ViewExistingSubject" IsVisible="{Binding SelectedSubject, Converter={StaticResource NullToVisibilityConverter}}">
-            <TextBlock>ID: {Binding SelectedSubject.Id}</TextBlock>
-            <TextBlock>Name: {Binding SelectedSubject.Name}</TextBlock>
-            <TextBlock>Description: {Binding SelectedSubject.Description}</TextBlock>
-            <Button Command="{Binding DropSubjectCommand}" Content="Drop Subject" />
-        </StackPanel>
-
-        <Button Command="{Binding EnrollSubjectCommand}" Content="Enroll in new subject"/>
-
-        <!-- Form to enroll in a new subject -->
-        <StackPanel x:Name="CreateNewSubject" IsVisible="{Binding IsCreatingNewSubject}">
-            <TextBlock>Enter subject details:</TextBlock>
-            <TextBlock>Name:</TextBlock>
-            <TextBox Watermark="Enter the name of the subject" Text="{Binding NewSubjectName}" />
-            <TextBlock>Short description:</TextBlock>
-            <TextBox Watermark="Enter a short description of the subject" Height="80" AcceptsReturn="True" TextWrapping="Wrap" Text="{Binding NewSubjectDescription}" />
-            <Button Command="{Binding AddSubjectCommand}" Content="Save" />
-        </StackPanel>
-    </StackPanel>
+        <!-- Available Subjects Tab -->
+        <TabItem Header="Available Subjects">
+            <StackPanel>
+                <ListBox ItemsSource="{Binding AvailableSubjects}" SelectedItem="{Binding SelectedSubject}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}"/>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <TextBlock Text="{Binding SubjectDetails}"/>
+                <Button Content="Enroll" Command="{Binding EnrollSubjectCommand}" IsEnabled="{Binding SelectedSubject}"/>
+            </StackPanel>
+        </TabItem>
+    </TabControl>
 </UserControl>
