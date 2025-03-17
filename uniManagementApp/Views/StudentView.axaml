@@ -2,9 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:uniManagementApp.ViewModels"
              x:Class="uniManagementApp.Views.StudentView"
-             x:DataType="vm:StudentViewModel"
-             Icon="/Assets/avalonia-logo.ico"
-             Title="Student View">
+             x:DataType="vm:StudentViewModel">
   
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
