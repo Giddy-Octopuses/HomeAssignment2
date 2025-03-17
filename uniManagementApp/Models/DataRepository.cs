@@ -102,13 +102,17 @@ namespace uniManagementApp.Models
             // Add subject to teacher
             SaveData();
         }
+        // Move LoadSubjectById method inside the DataRepository class
+        public Subject? LoadSubjectById(int subjectId)
+        {
+            // Find the subject by its ID
+            return Subjects.FirstOrDefault(subject => subject.Id == subjectId);
+        }
     }
-
     public class JsonDataStructure
     {
         public List<Subject>? Subjects { get; set; }
         public List<Student>? Students { get; set; }
         public List<Teacher>? Teachers { get; set; }
     }
-
 }
