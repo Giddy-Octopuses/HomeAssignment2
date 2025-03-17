@@ -6,7 +6,6 @@
              x:DataType="vm:TeacherViewModel">
 
     <UserControl.Resources>
-        <local:SubjectsConverter x:Key="SubjectsConverter"/>
         <local:NullToBoolConverter x:Key="NullToBoolConverter"/>
     </UserControl.Resources>
 
@@ -17,13 +16,9 @@
     </Design.DataContext>
 
     <StackPanel>
-        <TextBlock Text = "{Binding Teacher.Name}"/>
-        <TextBlock Text = "{Binding Teacher.Subjects, Converter={StaticResource SubjectsConverter}}"/>
-        <TextBlock>HERE STARTS THE ACTUAL WINDOW</TextBlock>
         <TextBlock>My Subjects</TextBlock>
-        <ListBox Name="MySubjectsListBox" ItemsSource="{Binding Teacher.Subjects}" SelectedItem="{Binding SelectedSubject}" SelectionMode="Single,Toggle"/>
-        <!-- REMEMBER: the name of the subject should show instead of the id -->
-        <StackPanel x:Name="ViewExistingSubject"> <!-- IsVisible="{Binding SelectedSubject, Converter={StaticResource NullToBoolConverter}}" -->
+        <ListBox Name="MySubjectsListBox" ItemsSource="{Binding SubjectAll}" SelectedItem="{Binding SelectedSubject}" SelectionMode="Single,Toggle"/>
+        <StackPanel x:Name="ViewExistingSubject" IsVisible="{Binding SelectedSubject, Converter={StaticResource NullToBoolConverter}}"> 
             <TextBlock>Subject details:</TextBlock>
             <TextBlock>
                 <Run FontWeight="Bold" Text="ID: " />
@@ -31,7 +26,7 @@
             </TextBlock>
             <TextBlock>
                 <Run FontWeight="Bold" Text="Name: " />
-                <Run Text="{Binding SelectedSubject.Name}" />
+                <Run Text="{Binding SelectedSubject}" />
             </TextBlock>
             <TextBlock>
                 <Run FontWeight="Bold" Text="Description: " />

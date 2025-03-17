@@ -18,4 +18,9 @@ public class Subject
         TeacherId = teacherId;
         StudentsEnrolled = studentsEnrolled;
     }
+    public override string ToString()
+    {
+        return $"{Name}";
+    }
+    
 }

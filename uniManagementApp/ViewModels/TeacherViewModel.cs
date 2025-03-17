@@ -6,101 +6,49 @@ using Avalonia.Data.Converters;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Avalonia.Controls;
+using System.Linq;
 using uniManagementApp.Models;
 
 namespace uniManagementApp.ViewModels
 {
-
     public partial class TeacherViewModel : ViewModelBase
     {
         public Teacher Teacher { get; }
-        public IDataRepository dataRepository = new DataRepository(); // need to create datarepository in this class
+        private readonly DataRepository _dataRepository;
+
         public TeacherViewModel(Teacher teacher)
         {
             Teacher = teacher;
+            _dataRepository = new DataRepository();
+            SubjectAll = TurnSubjectIdIntoAll(Teacher.Subjects);
         }
- 
-        /*    
 
-        [ObservableProperty]
-        private string? newSubjectName;
-
-        [ObservableProperty]
-        private string? newSubjectDescription; */
-
-        // I TRIED MAKING THE STACKPANEL VISIBLE ONLY AFTER A SUBJECT WAS CHOSEN, BUT IT DIDN'T WORK
-        /* private Subject? _selectedSubject;
-        public Subject? SelectedSubject
+        private List<Subject>? _subjectAll;
+        public List<Subject>? SubjectAll
         {
-            get => _selectedSubject;
-            set
+            get => _subjectAll;
+            set => SetProperty(ref _subjectAll, value);
+        }
+
+        public List<Subject>? TurnSubjectIdIntoAll(List<int> subjectIds)
+        {
+            var subjectAll = new List<Subject>();
+            foreach (int subjectId in subjectIds)
             {
-                if (SetProperty(ref _selectedSubject, value))
+                var subject = _dataRepository.FindSubject(subjectId);
+                if (subject != null)
                 {
-                    IsSelected = (value != null);
-                    Console.WriteLine($"SelectedSubject: {SelectedSubject?.Name}, IsSelected: {IsSelected}");
+                    subjectAll.Add(subject);
                 }
             }
-        }
+            return subjectAll;
+        } 
 
-        private bool _isSelected;
-        public bool IsSelected
-        {
-            get => _isSelected;
-            set => SetProperty(ref _isSelected, value);
-        } */
-
-        private Subject? _selectedSubject;
-        public Subject? SelectedSubject
-        {
-            get => _selectedSubject;
-            set => SetProperty(ref _selectedSubject, value);
-        }  
-
-        /* [ObservableProperty]
-        private Subject? selectedSubject; */
-
-        /* 
-        [RelayCommand]
-        public void AddSubject()
-        {
-            if (string.IsNullOrWhiteSpace(NewSubjectName) || string.IsNullOrWhiteSpace(NewSubjectDescription))
-            {
-                return;
-            }
-
-            MySubjects.Add(new Subject { Name = NewSubjectName!, Description = NewSubjectDescription! });
-            NewSubjectName = NewSubjectDescription = null;
-        }
-
-        [RelayCommand] 
-        public void DeleteSubject()
-        {
-            if (SelectedItem != null)
-            {
-                MySubjects.Remove(SelectedItem);
-                // MISSING: also remove from AvailableSubjects for students
-                SelectedItem = null; // Clear the selection
-            }
-        } */
-    }
-    public class SubjectsConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value is List<int> subjects)
-            {
-                return string.Join(", ", subjects);
-            }
-            return string.Empty;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+        [ObservableProperty]
+        private Subject? selectedSubject;
     }
 
+    // Used to determine whether a subject was selected from the listbox.
     public class NullToBoolConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -114,3 +62,35 @@ namespace uniManagementApp.ViewModels
         }
     }
 }
+
+/*    
+
+[ObservableProperty]
+private string? newSubjectName;
+
+[ObservableProperty]
+private string? newSubjectDescription; */
+
+/* 
+[RelayCommand]
+public void AddSubject()
+{
+    if (string.IsNullOrWhiteSpace(NewSubjectName) || string.IsNullOrWhiteSpace(NewSubjectDescription))
+    {
+        return;
+    }
+
+    MySubjects.Add(new Subject { Name = NewSubjectName!, Description = NewSubjectDescription! });
+    NewSubjectName = NewSubjectDescription = null;
+}
+
+[RelayCommand] 
+public void DeleteSubject()
+{
+    if (SelectedItem != null)
+    {
+        MySubjects.Remove(SelectedItem);
+        // MISSING: also remove from AvailableSubjects for students
+        SelectedItem = null; // Clear the selection
+    }
+} */
