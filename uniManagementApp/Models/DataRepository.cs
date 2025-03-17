@@ -8,7 +8,7 @@ namespace uniManagementApp.Models
 {
     public class DataRepository : IDataRepository
     {
-        public string DataFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "data.json");
+        public string FilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "data.json");
 
         public ObservableCollection<Subject> Subjects { get; private set; } = new();
         public ObservableCollection<Student> Students { get; private set; } = new();
@@ -17,10 +17,10 @@ namespace uniManagementApp.Models
 
         public DataRepository()
         {
-            LoadData();
+            LoadData(FilePath);
         }
 
-        private void LoadData()
+        public void LoadData(string DataFilePath)
         {
             try
             {
@@ -53,7 +53,7 @@ namespace uniManagementApp.Models
                 JsonData.Teachers = new List<Teacher>(Teachers);
 
                 var json = JsonSerializer.Serialize(JsonData, new JsonSerializerOptions { WriteIndented = true });
-                File.WriteAllText(DataFilePath, json);
+                File.WriteAllText(FilePath, json);
             }
             catch (Exception ex)
             {
