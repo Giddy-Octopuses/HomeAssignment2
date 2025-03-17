@@ -9,6 +9,7 @@ namespace uniManagementApp.ViewModels
 {
     public partial class StudentViewModel : ViewModelBase
     {
+        public DataRepository dataRepo = new DataRepository();
         public Student Student { get; }
         private Student _student;
         public ObservableCollection<Subject> EnrolledSubjects { get; }
@@ -32,11 +33,10 @@ namespace uniManagementApp.ViewModels
         public StudentViewModel(Student student)
         {
             _student = student;
-            var dataRepo = new DataRepository();
 
             // Load enrolled subjects from the student
             EnrolledSubjects = new ObservableCollection<Subject>(
-                _student.EnrolledSubjects.Select(id => dataRepo.LoadSubjectById(id))
+                _student.EnrolledSubjects.Select(id => dataRepo.FindSubject(id))
             );
         }
 
@@ -79,6 +79,12 @@ namespace uniManagementApp.ViewModels
                 _student.EnrolledSubjects.Remove(SelectedSubject.Id); // Remove from student's enrolled subjects
                 SelectedSubject = null; // Clear selection
             }
+        }
+
+        [RelayCommand]
+        public void AddSubjectCommand()
+        {
+            // AddSubjectCommand logic
         }
     }
 }
