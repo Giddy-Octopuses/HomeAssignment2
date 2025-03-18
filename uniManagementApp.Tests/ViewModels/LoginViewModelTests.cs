@@ -38,19 +38,23 @@ namespace uniManagementApp.Tests
 
             // Act
             var usernameTextBox = loginView.FindControl<TextBox>("UsernameTextBox");
+            Assert.NotNull(usernameTextBox);
             usernameTextBox.Focus();
             window.KeyTextInput("john123");
 
             var passwordTextBox = loginView.FindControl<TextBox>("PasswordTextBox");
+            Assert.NotNull(passwordTextBox);
             passwordTextBox.Focus();
             window.KeyTextInput("john123");
 
             var loginButton = loginView.FindControl<Button>("LoginButton");
+            Assert.NotNull(loginButton);
             loginButton.Focus();
             window.KeyPressQwerty(PhysicalKey.Enter, RawInputModifiers.None);
 
             // Assert
             var errorMessageTextBlock = loginView.FindControl<TextBlock>("ErrorMessageTextBlock");
+            Assert.NotNull(errorMessageTextBlock);
             Assert.Equal("Welcome, Steve!", errorMessageTextBlock.Text);
         }
 
@@ -77,23 +81,28 @@ namespace uniManagementApp.Tests
             loginViewModel.dataRepository.LoadData(filePath);
 
             var teacherRadioButton = loginView.FindControl<RadioButton>("TeacherRadioButton");
+            Assert.NotNull(teacherRadioButton);
             teacherRadioButton.IsChecked = true;
 
             // Act
             var usernameTextBox = loginView.FindControl<TextBox>("UsernameTextBox");
+            Assert.NotNull(usernameTextBox);
             usernameTextBox.Focus();
             window.KeyTextInput("smith123");
 
             var passwordTextBox = loginView.FindControl<TextBox>("PasswordTextBox");
+            Assert.NotNull(passwordTextBox);
             passwordTextBox.Focus();
             window.KeyTextInput("smith123");
 
             var loginButton = loginView.FindControl<Button>("LoginButton");
+            Assert.NotNull(loginButton);
             loginButton.Focus();
             window.KeyPressQwerty(PhysicalKey.Enter, RawInputModifiers.None);
 
             // Assert
             var errorMessageTextBlock = loginView.FindControl<TextBlock>("ErrorMessageTextBlock");
+            Assert.NotNull(errorMessageTextBlock);
             Assert.Equal("Welcome, Mr. Schmidt!", errorMessageTextBlock.Text);
         }
 
@@ -121,19 +130,23 @@ namespace uniManagementApp.Tests
 
             // Act
             var usernameTextBox = loginView.FindControl<TextBox>("UsernameTextBox");
+            Assert.NotNull(usernameTextBox);
             usernameTextBox.Focus();
             window.KeyTextInput("wrong_user");
 
             var passwordTextBox = loginView.FindControl<TextBox>("PasswordTextBox");
+            Assert.NotNull(passwordTextBox);
             passwordTextBox.Focus();
             window.KeyTextInput("wrong_pass");
 
             var loginButton = loginView.FindControl<Button>("LoginButton");
+            Assert.NotNull(loginButton);
             loginButton.Focus();
             window.KeyPressQwerty(PhysicalKey.Enter, RawInputModifiers.None);
 
             // Assert
             var errorMessageTextBlock = loginView.FindControl<TextBlock>("ErrorMessageTextBlock");
+            Assert.NotNull(errorMessageTextBlock);
             Assert.Equal("Invalid username or password!", errorMessageTextBlock.Text);
         }
 
@@ -161,11 +174,13 @@ namespace uniManagementApp.Tests
 
             // Act
             var loginButton = loginView.FindControl<Button>("LoginButton");
+            Assert.NotNull(loginButton);
             loginButton.Focus();
             window.KeyPressQwerty(PhysicalKey.Enter, RawInputModifiers.None);
 
             // Assert
             var errorMessageTextBlock = loginView.FindControl<TextBlock>("ErrorMessageTextBlock");
+            Assert.NotNull(errorMessageTextBlock);
             Assert.Equal("Please fill in all fields.", errorMessageTextBlock.Text);
         }
 
@@ -193,19 +208,23 @@ namespace uniManagementApp.Tests
 
             // Act
             var usernameTextBox = loginView.FindControl<TextBox>("UsernameTextBox");
+            Assert.NotNull(usernameTextBox);
             usernameTextBox.Focus();
             window.KeyTextInput("smith123");
 
             var passwordTextBox = loginView.FindControl<TextBox>("PasswordTextBox");
+            Assert.NotNull(passwordTextBox);
             passwordTextBox.Focus();
             window.KeyTextInput("smith123");
 
             var loginButton = loginView.FindControl<Button>("LoginButton");
+            Assert.NotNull(loginButton);
             loginButton.Focus();
             window.KeyPressQwerty(PhysicalKey.Enter, RawInputModifiers.None);
 
             // Assert
             var errorMessageTextBlock = loginView.FindControl<TextBlock>("ErrorMessageTextBlock");
+            Assert.NotNull(errorMessageTextBlock);
             Assert.Equal("Invalid username or password!", errorMessageTextBlock.Text);
         }
 
@@ -232,23 +251,28 @@ namespace uniManagementApp.Tests
             loginViewModel.dataRepository.LoadData(filePath);
 
             var teacherRadioButton = loginView.FindControl<RadioButton>("TeacherRadioButton");
+            Assert.NotNull(teacherRadioButton);
             teacherRadioButton.IsChecked = true;
 
             // Act
             var usernameTextBox = loginView.FindControl<TextBox>("UsernameTextBox");
+            Assert.NotNull(usernameTextBox);
             usernameTextBox.Focus();
             window.KeyTextInput("john123");
 
             var passwordTextBox = loginView.FindControl<TextBox>("PasswordTextBox");
+            Assert.NotNull(passwordTextBox);
             passwordTextBox.Focus();
             window.KeyTextInput("john123");
 
             var loginButton = loginView.FindControl<Button>("LoginButton");
+            Assert.NotNull(loginButton);
             loginButton.Focus();
             window.KeyPressQwerty(PhysicalKey.Enter, RawInputModifiers.None);
 
             // Assert
             var errorMessageTextBlock = loginView.FindControl<TextBlock>("ErrorMessageTextBlock");
+            Assert.NotNull(errorMessageTextBlock);
             Assert.Equal("Invalid username or password!", errorMessageTextBlock.Text);
         }
     }
