@@ -8,24 +8,6 @@
       "StudentsEnrolled": [
         1
       ]
-    },
-    {
-      "Id": 2,
-      "Name": "sdfa",
-      "Description": "fdshf",
-      "TeacherId": 1,
-      "StudentsEnrolled": [
-        1
-      ]
-    },
-    {
-      "Id": 2,
-      "Name": "sdfa",
-      "Description": "fdshf",
-      "TeacherId": 1,
-      "StudentsEnrolled": [
-        1
-      ]
     }
   ],
   "Students": [
