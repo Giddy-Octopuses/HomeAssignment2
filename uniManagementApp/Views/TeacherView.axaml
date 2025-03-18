@@ -32,29 +32,38 @@
                 <Run FontWeight="Bold" Text="Description: " />
                 <Run Text="{Binding SelectedSubject.Description}" />
             </TextBlock>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                <Button Command="{Binding EditSubject}">Edit Subject</Button>
+                <Button Command="{Binding DeleteSubject}">Delete Subject</Button>
+            </StackPanel>
+            <StackPanel x:Name="EditOldSubject" IsVisible="{Binding EditSubjectStackPanelVisible}">
+                <TextBlock>Edit subject details:</TextBlock>
+                <TextBlock>Name:</TextBlock>
+                <TextBox Text="{Binding SelectedSubject}" Watermark="Enter the name of the subject"/>
+                <TextBlock>Short description:</TextBlock>
+                <TextBox Text="{Binding SelectedSubject.Description}" Watermark="Enter a short description of the sunbject" Height="60" AcceptsReturn="True" TextWrapping="Wrap"/>
+                <Button Command="{Binding Save2}">Save</Button>
+            </StackPanel>    
+            <Popup Name="Popup" IsLightDismissEnabled="True" IsOpen="{Binding PopupOpen}">    
+                <Border BorderThickness="0.75" BorderBrush="Black" Padding="6,3" Background="White">
+                    <TextBlock Text="The subject was deleted successfully." Foreground="Green"/>
+                </Border>
+            </Popup>
         </StackPanel>    
+        <Button Command="{Binding AddSubject}">Create new subject</Button>
+        <StackPanel x:Name="CreateNewSubject" IsVisible="{Binding NewSubjectStackPanelVisible}">
+            <TextBlock>Enter subject details:</TextBlock>
+            <TextBlock>Name:</TextBlock>
+            <TextBox Text="{Binding NewSubjectName}" Watermark="Enter the name of the subject"/>
+            <TextBlock>Short description:</TextBlock>
+            <TextBox Text="{Binding NewSubjectDescription}" Watermark="Enter a short description of the sunbject" Height="60" AcceptsReturn="True" TextWrapping="Wrap"/>
+            <Button Command="{Binding Save}">Save</Button>
+            <Popup Name="Popup2" IsLightDismissEnabled="True" IsOpen="{Binding Popup2Open}">    
+                <Border BorderThickness="0.75" BorderBrush="Black" Padding="6,3" Background="White">
+                    <TextBlock Text="{Binding Message}" Foreground="{Binding Colour}"/>
+                </Border>
+            </Popup>
+        </StackPanel>
     </StackPanel>
 
 </UserControl>
-    <!--
-    <StackPanel>
-        <ListBox Name="MySubjectsListBox" ItemsSource="{Binding MySubjects}" SelectedItem="{Binding SelectedSubject, Mode=TwoWay}" SelectionMode="Single,Toggle"/>
-        <StackPanel x:Name="ViewExistingSubject">
-            <TextBlock>ID: BINDING MISSING</TextBlock>
-            <TextBlock>Name: BINDING MISSING</TextBlock>
-            <TextBlock>Description: BINDING MISSING</TextBlock>
-            <Button Command="{Binding EditSubject}">Edit</Button>  method missing 
-            <Button Command="{Binding DeleteSubject}">Delete</Button>
-        </StackPanel>
-        <Button Command="{Binding CreateSubject}">Create new subject</Button>   method missing 
-        <StackPanel x:Name="CreateNewSubject">
-            <TextBlock>Enter subject details:</TextBlock>
-            <TextBlock>Name:</TextBlock>
-            <TextBox Watermark="Enter the name of the subject"/>
-            <TextBlock>Short description:</TextBlock>
-            <TextBox Watermark="Enter a short description of the sunbject" Height="80" AcceptsReturn="True" TextWrapping="Wrap"/>
-            <Button Command="{Binding AddSubject}">Save</Button>
-        </StackPanel>      
-    </StackPanel> -->
-
-
