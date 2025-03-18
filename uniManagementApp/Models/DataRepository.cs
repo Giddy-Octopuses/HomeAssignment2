@@ -21,7 +21,7 @@ namespace uniManagementApp.Models
             LoadData();
         }
 
-        private void LoadData()
+        public void LoadData()
         {
             try
             {
