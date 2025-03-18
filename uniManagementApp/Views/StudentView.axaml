@@ -1,38 +1,64 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:vm="using:uniManagementApp.ViewModels"
+             xmlns:vm="clr-namespace:uniManagementApp.ViewModels"
+             xmlns:converters="using:uniManagementApp.Converters"
+             xmlns:av="clr-namespace:Avalonia;assembly=Avalonia.Base"
              x:Class="uniManagementApp.Views.StudentView"
              x:DataType="vm:StudentViewModel">
-    
-    <TabControl>
-        <!-- Enrolled Subjects Tab -->
-        <TabItem Header="Enrolled Subjects">
-            <StackPanel>
-                <ListBox ItemsSource="{Binding EnrolledSubjects}" SelectedItem="{Binding SelectedSubject}">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Name}"/>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-                <TextBlock Text="{Binding SubjectDetails}"/>
-                <Button Content="Drop" Command="{Binding DropSubjectCommand}" IsEnabled="{Binding SelectedSubject}"/>
-            </StackPanel>
-        </TabItem>
-        
-        <!-- Available Subjects Tab -->
-        <TabItem Header="Available Subjects">
-            <StackPanel>
-                <ListBox ItemsSource="{Binding AvailableSubjects}" SelectedItem="{Binding SelectedSubject}">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Name}"/>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-                <TextBlock Text="{Binding SubjectDetails}"/>
-                <Button Content="Enroll" Command="{Binding EnrollSubjectCommand}" IsEnabled="{Binding SelectedSubject}"/>
-            </StackPanel>
-        </TabItem>
-    </TabControl>
+
+    <UserControl.Resources>
+        <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+    </UserControl.Resources>
+
+    <StackPanel>
+        <TabControl SelectedIndex="{Binding SelectedTabIndex}">
+            <!-- Enrolled Subjects Tab -->
+            <TabItem Header="Enrolled Subjects">
+                <StackPanel>
+                    <ListBox ItemsSource="{Binding EnrolledSubjects}"
+                             SelectedItem="{Binding SelectedSubject}"
+                             SelectionMode="Single,Toggle">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" />
+                                    <TextBlock Text="{Binding Description}" TextWrapping="Wrap" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                    <StackPanel av:Visual.IsVisible="{Binding SelectedSubject, Converter={StaticResource NullToVisibilityConverter}}">
+                        <TextBlock Text="{Binding SubjectDetails}"/>
+                        <Button Content="Drop"
+                                Command="{Binding DropSubjectCommand}" />
+                    </StackPanel>
+                </StackPanel>
+            </TabItem>
+
+            <!-- Available Subjects Tab -->
+            <TabItem Header="Available Subjects">
+                <StackPanel>
+                    <ListBox ItemsSource="{Binding AvailableSubjects}"
+                             SelectedItem="{Binding SelectedSubject}"
+                             SelectionMode="Single,Toggle">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" />
+                                    <TextBlock Text="{Binding Description}" TextWrapping="Wrap" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                    <StackPanel av:Visual.IsVisible="{Binding SelectedSubject, Converter={StaticResource NullToVisibilityConverter}}">
+                        <TextBlock Text="{Binding SubjectDetails}"/>
+                        <Button Content="Enroll"
+                                Command="{Binding EnrollSubjectCommand}" />
+                    </StackPanel>
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+    </StackPanel>
 </UserControl>
