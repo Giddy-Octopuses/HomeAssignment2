@@ -12,7 +12,7 @@ namespace uniManagementApp.Tests
                                             ""Teachers"": [{ ""Id"": 1, ""Name"": ""Mr. Smith"", ""Username"": ""smith123"", ""Password"": ""smith123"", ""Subjects"": [1] }] }";
 
         [Fact]
-        public void DataRepository_Constructor()
+        public void DataRepository_Constructor_ShouldSucceed()
         {
             // Arrange
             var dataRepository = new DataRepository();
@@ -27,7 +27,7 @@ namespace uniManagementApp.Tests
         }
 
         [Fact]
-        public void DataRepository_SaveData()
+        public void DataRepository_SaveData_ShouldSucceed()
         {
             // Arrange
             var dataRepository = new DataRepository();
@@ -35,18 +35,27 @@ namespace uniManagementApp.Tests
             File.WriteAllText(filePath, ValidJson);
             dataRepository.LoadData(filePath);
 
-            var subject = new Subject(1, "Math", "Mathematics", 1);
-            dataRepository.Subjects.Add(subject);
+            var newSubject = new Subject(2, "Physics", "Study of matter and energy", 2);
+            dataRepository.Subjects.Add(newSubject);
 
             // Act
-            dataRepository.SaveData();
+            dataRepository.SaveData(filePath);
+
+            // Read the file again to verify changes
+            var newDataRepository = new DataRepository();
+            newDataRepository.LoadData(filePath);
 
             // Assert
-            Assert.Contains(subject, dataRepository.Subjects);
+            var savedSubject = newDataRepository.Subjects.FirstOrDefault(s => s.Id == 2);
+            Assert.NotNull(savedSubject);
+            Assert.Equal("Physics", savedSubject.Name);
+            Assert.Equal("Study of matter and energy", savedSubject.Description);
+            Assert.Equal(2, savedSubject.TeacherId);
+            
         }
 
         [Fact]
-        public void DataRepository_FindTeacher()
+        public void DataRepository_FindTeacher_ShouldSucceed()
         {
             // Arrange
             var dataRepository = new DataRepository();
@@ -65,7 +74,7 @@ namespace uniManagementApp.Tests
         }   
 
         [Fact]
-        public void DataRepository_FindStudent()
+        public void DataRepository_FindStudent_ShouldSucceed()
         {
             // Arrange
             var dataRepository = new DataRepository();
@@ -78,7 +87,7 @@ namespace uniManagementApp.Tests
         }
 
         [Fact]
-        public void DataRepository_FindSubject()
+        public void DataRepository_FindSubject_ShouldSucceed()
         {
             // Arrange
             var dataRepository = new DataRepository();
@@ -91,7 +100,7 @@ namespace uniManagementApp.Tests
         }
 
         [Fact]
-        public void DataRepository_CreateSubject()
+        public void DataRepository_CreateSubject_ShouldSucceed()
         {
             // Arrange
             // Act

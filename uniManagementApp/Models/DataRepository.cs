@@ -44,7 +44,7 @@ namespace uniManagementApp.Models
             }
         }
 
-        public void SaveData()
+        public void SaveData( string DataFilePath)
         {
             try
             {
@@ -53,7 +53,7 @@ namespace uniManagementApp.Models
                 JsonData.Teachers = new List<Teacher>(Teachers);
 
                 var json = JsonSerializer.Serialize(JsonData, new JsonSerializerOptions { WriteIndented = true });
-                File.WriteAllText(FilePath, json);
+                File.WriteAllText(DataFilePath, json);
             }
             catch (Exception ex)
             {
@@ -100,7 +100,9 @@ namespace uniManagementApp.Models
         public void CreateSubject(Teacher teacher, Subject subject)
         {
             // Add subject to teacher
-            SaveData();
+            teacher.Subjects.Add(subject.Id);
+            Subjects.Add(subject);
+            SaveData(FilePath);
         }
     }
 
