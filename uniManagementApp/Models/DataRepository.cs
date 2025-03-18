@@ -8,7 +8,7 @@ namespace uniManagementApp.Models
 {
     public class DataRepository : IDataRepository
     {
-        public string DataFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "data.json");
+        public string DataFilePath = Path.Combine("data.json");
 
         public ObservableCollection<Subject> Subjects { get; private set; } = new();
         public ObservableCollection<Student> Students { get; private set; } = new();
