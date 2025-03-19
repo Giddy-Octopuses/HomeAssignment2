@@ -16,7 +16,14 @@
     </Design.DataContext>
 
     <StackPanel>
-        <TextBlock>My Subjects</TextBlock>
+        <TextBlock FontStyle="Italic">My Subjects</TextBlock>
+        <TextBlock>
+            <TextBlock.Text>
+                <MultiBinding StringFormat="Signed in as {0}">
+                    <Binding Path="Teacher.Name"/>
+                </MultiBinding>
+            </TextBlock.Text>
+        </TextBlock>
         <ListBox Name="MySubjectsListBox" ItemsSource="{Binding SubjectAll}" SelectedItem="{Binding SelectedSubject}" SelectionMode="Single,Toggle"/>
         <StackPanel x:Name="ViewExistingSubject" IsVisible="{Binding SelectedSubject, Converter={StaticResource NullToBoolConverter}}"> 
             <TextBlock>Subject details:</TextBlock>

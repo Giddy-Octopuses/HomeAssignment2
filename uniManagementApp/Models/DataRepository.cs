@@ -10,7 +10,7 @@ namespace uniManagementApp.Models
     {
         public string DataFilePath = Path.Combine("data.json");
 
-        public ObservableCollection<Subject> Subjects { get; private set; } = new();
+        public ObservableCollection<Subject> Subjects { get; internal set; } = new();
         public ObservableCollection<Student> Students { get; private set; } = new();
         public ObservableCollection<Teacher> Teachers { get; private set; } = new();
         public JsonDataStructure JsonData { get; private set; } = new();

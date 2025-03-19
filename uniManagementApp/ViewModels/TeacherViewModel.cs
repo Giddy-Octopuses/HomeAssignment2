@@ -122,6 +122,10 @@ namespace uniManagementApp.ViewModels
                 _dataRepository.Subjects.Add(subj);
             }
 
+            // Order the subjects by id, so they are in the original order.
+            var orderedSubjects = new ObservableCollection<Subject>(_dataRepository.Subjects.OrderBy(s => s.Id));
+            _dataRepository.Subjects = orderedSubjects;
+
             _dataRepository.SaveData();
 
             EditSubjectStackPanelVisible = false;
@@ -131,7 +135,6 @@ namespace uniManagementApp.ViewModels
             Popup3Open = true;
             await Task.Delay(3000);
             Popup3Open = false;
-
         }
 
         [RelayCommand]
@@ -145,6 +148,11 @@ namespace uniManagementApp.ViewModels
                 SubjectAll.Remove(SelectedSubject);
                 Teacher.Subjects.Remove(IdToDelete);
                 _dataRepository.Subjects.Remove(SubjectToDelete);
+                var teacher = _dataRepository.Teachers.FirstOrDefault(t => t.Id == Teacher.Id);
+                if (teacher != null)
+                {
+                    teacher.Subjects.Remove(IdToDelete);
+                }
                 // MISSING: also remove from AvailableSubjects for students
                 SelectedSubject = null;
 
@@ -190,7 +198,13 @@ namespace uniManagementApp.ViewModels
 
             SubjectAll.Add(new Subject(newId, NewSubjectName!, NewSubjectDescription!, Teacher.Id));
             _dataRepository.Subjects.Add(new Subject(newId, NewSubjectName!, NewSubjectDescription!, Teacher.Id));
-            Teacher.Subjects.Add(newId);
+            Teacher.Subjects.Add(newId); 
+            var teacher = _dataRepository.Teachers.FirstOrDefault(t => t.Id == Teacher.Id);
+            if (teacher != null)
+            {
+                teacher.Subjects.Add(newId);
+            }
+
             // MISSING: also add to AvailableSubjects for students
             NewSubjectName = NewSubjectDescription = null;
 
