@@ -10,53 +10,51 @@
         <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
     </UserControl.Resources>
 
-    <StackPanel>
+    <StackPanel HorizontalAlignment="Left">
         <TabControl SelectedIndex="{Binding SelectedTabIndex}">
             <!-- Enrolled Subjects Tab -->
             <TabItem Header="Enrolled Subjects">
-                <StackPanel>
+                <StackPanel HorizontalAlignment="Left">
                     <ListBox ItemsSource="{Binding EnrolledSubjects}"
                              SelectedItem="{Binding SelectedSubject}"
-                             SelectionMode="Single,Toggle">
+                             SelectionMode="Single,Toggle"
+                             Width="200"
+                             HorizontalAlignment="Left">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <StackPanel>
-                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" />
-                                    <TextBlock Text="{Binding Description}" TextWrapping="Wrap" />
-                                </StackPanel>
+                                <Border Background="{Binding Color}" CornerRadius="1" Margin="0.5" Padding="1" Width="180">
+                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"/>
+                                </Border>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
 
-                    <!-- <StackPanel av:Visual.IsVisible="{Binding SelectedSubject, Converter={StaticResource NullToVisibilityConverter}}">-->
-                        <TextBlock Text="{Binding SubjectDetails}"/>
-                        <Button Content="Drop"
-                                Command="{Binding DropSubjectCommand}" />
-                    <!-- </StackPanel>-->
+                    <TextBlock Text="{Binding SubjectDetails}" HorizontalAlignment="Left"/>
+                    <Button Content="Drop"
+                            Command="{Binding DropSubjectCommand}" HorizontalAlignment="Left"/>
                 </StackPanel>
             </TabItem>
 
             <!-- Available Subjects Tab -->
             <TabItem Header="Available Subjects">
-                <StackPanel>
+                <StackPanel HorizontalAlignment="Left">
                     <ListBox ItemsSource="{Binding AvailableSubjects}"
                              SelectedItem="{Binding SelectedSubject}"
-                             SelectionMode="Single,Toggle">
+                             SelectionMode="Single,Toggle"
+                             Width="200"
+                             HorizontalAlignment="Left">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <StackPanel>
-                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" />
-                                    <TextBlock Text="{Binding Description}" TextWrapping="Wrap" />
-                                </StackPanel>
+                                <Border Background="{Binding Color}" CornerRadius="1" Margin="0.5" Padding="1" Width="180">
+                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"/>
+                                </Border>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
 
-                    <!-- <StackPanel av:Visual.IsVisible="{Binding SelectedSubject, Converter={StaticResource NullToVisibilityConverter}}">-->
-                        <TextBlock Text="{Binding SubjectDetails}"/>
-                        <Button Content="Enroll"
-                                Command="{Binding EnrollSubjectCommand}" />
-                    <!-- </StackPanel>-->
+                    <TextBlock Text="{Binding SubjectDetails}" HorizontalAlignment="Left"/>
+                    <Button Content="Enroll"
+                            Command="{Binding EnrollSubjectCommand}" HorizontalAlignment="Left"/>
                 </StackPanel>
             </TabItem>
         </TabControl>

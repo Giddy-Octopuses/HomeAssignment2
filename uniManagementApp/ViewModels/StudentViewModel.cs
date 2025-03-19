@@ -55,7 +55,7 @@ namespace uniManagementApp.ViewModels
             RefreshAvailableSubjects();
         }
 
-        public StudentViewModel() : this(new Student(1, "John Doe", "johndoe", "password123", new List<int>()))
+        public StudentViewModel()
         {
         }
 
