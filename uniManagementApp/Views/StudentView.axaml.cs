@@ -1,15 +1,21 @@
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
-using uniManagementApp.ViewModels;
+using Avalonia.Controls; // For UserControl
+using Avalonia.Markup.Xaml; // For AvaloniaXamlLoader
+using uniManagementApp.ViewModels; // For StudentViewModel
+using uniManagementApp.Models; // For Student
 
 namespace uniManagementApp.Views
 {
     public partial class StudentView : UserControl
     {
+        public StudentView(Student student)
+        {
+            InitializeComponent();
+            DataContext = new StudentViewModel(student);
+        }
+
         public StudentView()
         {
             InitializeComponent();
-            DataContext = new StudentViewModel();
         }
 
         private void InitializeComponent()
