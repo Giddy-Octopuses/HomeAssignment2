@@ -5,15 +5,17 @@
       "Name": "Math",
       "Description": "Mathematics is the study of numbers, shapes and patterns.",
       "TeacherId": 1,
-      "StudentsEnrolled": []
-      },
+      "StudentsEnrolled": [
+        111222
+      ]
+    },
     {
       "Id": 2,
       "Name": "Physics",
       "Description": "Physics is the study of matter, energy, and the fundamental forces of nature, exploring how they interact and govern the universe.",
       "TeacherId": 2,
       "StudentsEnrolled": []
-      }
+    }
   ],
   "Students": [
     {
