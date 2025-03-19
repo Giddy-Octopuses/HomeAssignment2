@@ -60,6 +60,15 @@ namespace uniManagementApp.ViewModels
         [ObservableProperty]
         private string colour;
 
+        [ObservableProperty]
+        private bool popup3Open;
+
+        [ObservableProperty]
+        private string message3;
+
+        [ObservableProperty]
+        private string colour3;
+
         public void SetPopup(Popup popup)
         {
             _popup = popup;
@@ -79,54 +88,67 @@ namespace uniManagementApp.ViewModels
         {
             if (string.IsNullOrWhiteSpace(SelectedSubject.Name) || string.IsNullOrWhiteSpace(SelectedSubject.Description))
             {
-                Message = "Error: Fill out both Name and Description.";
-                Colour = "Red";
-                Popup2Open = true;
+                Message3 = "Error: Fill out both Name and Description.";
+                Colour3 = "Red";
+                Popup3Open = true;
                 await Task.Delay(3000);
-                Popup2Open = false;
+                Popup3Open = false;
                 return;
             }
 
-            // Update the subject in the SubjectAll collection
+            // Find the subject in the SubjectAll collection and replace it with the edited data.
             var subject = SubjectAll.FirstOrDefault(s => s.Id == SelectedSubject.Id);
             if (subject != null)
             {
-                subject.Name = SelectedSubject.Name;
-                subject.Description = SelectedSubject.Description;
+                var updatedSubject = new Subject(subject.Id, SelectedSubject.Name, SelectedSubject.Description, subject.TeacherId, subject.StudentsEnrolled);
+                SubjectAll.Replace(subject, updatedSubject);
             }
 
             // MISSING: also edit in AvailableSubjects for students
 
-            // Update the Subjects collection in the DataRepository
-            // ERROR: this won't work when there're multiply teachers
-            _dataRepository.Subjects.Clear();
+            // Delete every subject from _dataRepository.Subjects that are in SubjectAll.
+            foreach (var subj in SubjectAll)
+            {
+                var repoSubject = _dataRepository.Subjects.FirstOrDefault(s => s.Id == subj.Id);
+                if (repoSubject != null)
+                {
+                    _dataRepository.Subjects.Remove(repoSubject);
+                }
+            }
+
+            // Put every subject of SubjectAll back to _dataRepository.Subjects --> the updated subjects will show in datarepository.
             foreach (var subj in SubjectAll)
             {
                 _dataRepository.Subjects.Add(subj);
             }
 
-            _dataRepository.SaveData(); // ERROR: doesn't save to the json
+            _dataRepository.SaveData();
 
             EditSubjectStackPanelVisible = false;
 
-            Message = "The subject was edited successfully.";
-            Colour = "Green";
-            Popup2Open = true;
+            Message3 = "The subject was edited successfully.";
+            Colour3 = "Green";
+            Popup3Open = true;
             await Task.Delay(3000);
-            Popup2Open = false;
+            Popup3Open = false;
 
         }
 
-        [RelayCommand] 
+        [RelayCommand]
         public async void DeleteSubject()
         {
             if (SelectedSubject != null)
             {
-                SubjectAll.Remove(SelectedSubject);
-                // MISSING: also remove from AvailableSubjects for students
-                SelectedSubject = null; 
+                int IdToDelete = SelectedSubject.Id;
+                Subject SubjectToDelete = SelectedSubject;
 
-                _dataRepository.SaveData(); // ERROR: doesn't save to the json
+                SubjectAll.Remove(SelectedSubject);
+                Teacher.Subjects.Remove(IdToDelete);
+                _dataRepository.Subjects.Remove(SubjectToDelete);
+                // MISSING: also remove from AvailableSubjects for students
+                SelectedSubject = null;
+
+                _dataRepository.SaveData();
 
                 // Show the popup for 3 seconds
                 PopupOpen = true;
@@ -164,13 +186,17 @@ namespace uniManagementApp.ViewModels
             }
 
             // Find the maximum existing ID and add 1 to it.
-            int newId = SubjectAll.Any() ? SubjectAll.Max(s => s.Id) + 1 : 1;
+            int newId = _dataRepository.Subjects.Any() ? _dataRepository.Subjects.Max(s => s.Id) + 1 : 1;
 
             SubjectAll.Add(new Subject(newId, NewSubjectName!, NewSubjectDescription!, Teacher.Id));
+            _dataRepository.Subjects.Add(new Subject(newId, NewSubjectName!, NewSubjectDescription!, Teacher.Id));
+            Teacher.Subjects.Add(newId);
             // MISSING: also add to AvailableSubjects for students
             NewSubjectName = NewSubjectDescription = null;
 
-            _dataRepository.SaveData(); // ERROR: doesn't save to the json
+            _dataRepository.SaveData();
+
+            NewSubjectStackPanelVisible = false;
 
             Message = "The subject was saved successfully.";
             Colour = "Green";
@@ -191,6 +217,19 @@ namespace uniManagementApp.ViewModels
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
+        }
+    }
+
+    // Used for the Edit method.
+    public static class ObservableCollectionExtensions
+    {
+        public static void Replace<T>(this ObservableCollection<T> collection, T oldItem, T newItem)
+        {
+            int index = collection.IndexOf(oldItem);
+            if (index >= 0)
+            {
+                collection[index] = newItem;
+            }
         }
     }
 }
