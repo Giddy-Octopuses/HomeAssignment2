@@ -9,7 +9,7 @@ namespace uniManagementApp.Models
 {
     public class DataRepository : IDataRepository
     {
-        public string DataFilePath = Path.Combine("data.json");
+        public string DataFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data.json");
 
         public ObservableCollection<Subject> Subjects { get; private set; } = new();
         public ObservableCollection<Student> Students { get; private set; } = new();
@@ -109,7 +109,33 @@ namespace uniManagementApp.Models
             // Find the subject by its ID
             return Subjects.FirstOrDefault(subject => subject.Id == subjectId);
         }
+
+        public void EnrollStudentInSubject(Student student, Subject subject)
+        {
+            if (student.EnrolledSubjects == null)
+            {
+                student.EnrolledSubjects = new List<int>();
+            }
+
+            if (!student.EnrolledSubjects.Contains(subject.Id))
+            {
+                student.EnrolledSubjects.Add(subject.Id);
+                subject.StudentsEnrolled?.Add(student.Id);
+                SaveData();
+            }
+        }
+
+        public void DropStudentFromSubject(Student student, Subject subject)
+        {
+            if (student.EnrolledSubjects != null && student.EnrolledSubjects.Contains(subject.Id))
+            {
+                student.EnrolledSubjects.Remove(subject.Id);
+                subject.StudentsEnrolled?.Remove(student.Id);
+                SaveData();
+            }
+        }
     }
+
     public class JsonDataStructure
     {
         public List<Subject>? Subjects { get; set; }
