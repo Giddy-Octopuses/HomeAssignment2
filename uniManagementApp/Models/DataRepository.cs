@@ -9,7 +9,7 @@ namespace uniManagementApp.Models
 {
     public class DataRepository : IDataRepository
     {
-        public string DataFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data.json");
+        public string DataFilePath = Path.Combine("data.json");
 
         public ObservableCollection<Subject> Subjects { get; private set; } = new();
         public ObservableCollection<Student> Students { get; private set; } = new();
@@ -106,36 +106,18 @@ namespace uniManagementApp.Models
         // Move LoadSubjectById method inside the DataRepository class
         public Subject? LoadSubjectById(int subjectId)
         {
-            // Find the subject by its ID
-            return Subjects.FirstOrDefault(subject => subject.Id == subjectId);
-        }
-
-        public void EnrollStudentInSubject(Student student, Subject subject)
+            foreach (var subject in Subjects)
         {
-            if (student.EnrolledSubjects == null)
+                if (string.IsNullOrEmpty(subject.Color))
             {
-                student.EnrolledSubjects = new List<int>();
-            }
-
-            if (!student.EnrolledSubjects.Contains(subject.Id))
-            {
-                student.EnrolledSubjects.Add(subject.Id);
-                subject.StudentsEnrolled?.Add(student.Id);
-                SaveData();
+                    subject.Color = $"#{new Random().Next(0x1000000):X6}";
             }
         }
 
-        public void DropStudentFromSubject(Student student, Subject subject)
-        {
-            if (student.EnrolledSubjects != null && student.EnrolledSubjects.Contains(subject.Id))
-            {
-                student.EnrolledSubjects.Remove(subject.Id);
-                subject.StudentsEnrolled?.Remove(student.Id);
-                SaveData();
-            }
+            return Subjects.FirstOrDefault(s => s.Id == subjectId);
         }
+
     }
-
     public class JsonDataStructure
     {
         public List<Subject>? Subjects { get; set; }

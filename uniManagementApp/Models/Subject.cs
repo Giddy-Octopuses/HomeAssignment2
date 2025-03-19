@@ -6,11 +6,11 @@ namespace uniManagementApp.Models
     public class Subject
     {
         public int Id { get; private set; }
-        public string Name { get; set;}
-        public string Description { get; set;}
+        public string Name { get; set; }
+        public string Description { get; set; }
         public int TeacherId { get; private set; }
         public List<int>? StudentsEnrolled { get; set; }
-        //public Teacher? Teacher { get; set; } // (Add a reference to the Teacher) object doesnt work
+        public Teacher? Teacher { get; set; } // Add a reference to the Teacher object
 
         private static Random random = new Random();
         public string Color { get; set; } = $"#{random.Next(0x1000000):X6}"; // Random color on creation
