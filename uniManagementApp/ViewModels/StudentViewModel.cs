@@ -130,13 +130,15 @@ namespace uniManagementApp.ViewModels
 
             Console.WriteLine($"Dropping subject: {SelectedSubject.Name}");
 
+            var id = SelectedSubject.Id;
+
             // Remove the subject from the student's enrolled subjects
             _student.EnrolledSubjects?.Remove(SelectedSubject.Id);
             EnrolledSubjects.Remove(SelectedSubject);
-            Console.WriteLine($"Removed subject {SelectedSubject.Id} from student's enrolled subjects");
+            Console.WriteLine($"Removed subject {id} from student's enrolled subjects");
 
             // Update the subject's list of enrolled students
-            var subject = dataRepo.FindSubject(SelectedSubject.Id);
+            var subject = dataRepo.FindSubject(id);
             if (subject != null)
             {
                 subject.StudentsEnrolled?.Remove(_student.Id);
@@ -144,7 +146,7 @@ namespace uniManagementApp.ViewModels
             }
             else
             {
-                Console.WriteLine($"Subject {SelectedSubject.Id} not found");
+                Console.WriteLine($"Subject {id} not found");
             }
 
             // Save the updated data

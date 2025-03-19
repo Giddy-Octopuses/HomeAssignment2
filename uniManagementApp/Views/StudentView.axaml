@@ -28,11 +28,11 @@
                         </ListBox.ItemTemplate>
                     </ListBox>
 
-                    <StackPanel av:Visual.IsVisible="{Binding SelectedSubject, Converter={StaticResource NullToVisibilityConverter}}">
+                    <!-- <StackPanel av:Visual.IsVisible="{Binding SelectedSubject, Converter={StaticResource NullToVisibilityConverter}}">-->
                         <TextBlock Text="{Binding SubjectDetails}"/>
                         <Button Content="Drop"
                                 Command="{Binding DropSubjectCommand}" />
-                    </StackPanel>
+                    <!-- </StackPanel>-->
                 </StackPanel>
             </TabItem>
 
@@ -52,11 +52,11 @@
                         </ListBox.ItemTemplate>
                     </ListBox>
 
-                    <StackPanel av:Visual.IsVisible="{Binding SelectedSubject, Converter={StaticResource NullToVisibilityConverter}}">
+                    <!-- <StackPanel av:Visual.IsVisible="{Binding SelectedSubject, Converter={StaticResource NullToVisibilityConverter}}">-->
                         <TextBlock Text="{Binding SubjectDetails}"/>
                         <Button Content="Enroll"
                                 Command="{Binding EnrollSubjectCommand}" />
-                    </StackPanel>
+                    <!-- </StackPanel>-->
                 </StackPanel>
             </TabItem>
         </TabControl>
