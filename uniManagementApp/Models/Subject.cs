@@ -1,21 +1,27 @@
 using System.Collections.Generic;
+using System;
 
-namespace uniManagementApp.Models;
-
-public class Subject
+namespace uniManagementApp.Models
 {
-    public int Id { get; private set; }
-    public string Name { get; set;}
-    public string Description { get; set;}
-    public int TeacherId { get; private set; }
-    public List<int>? StudentsEnrolled { get; set; }
-
-    public Subject(int id, string name, string description, int teacherId, List<int>? studentsEnrolled = null)
+    public class Subject
     {
-        Id = id;
-        Name = name;
-        Description = description;
-        TeacherId = teacherId;
-        StudentsEnrolled = studentsEnrolled;
+        public int Id { get; private set; }
+        public string Name { get; set;}
+        public string Description { get; set;}
+        public int TeacherId { get; private set; }
+        public List<int>? StudentsEnrolled { get; set; }
+        //public Teacher? Teacher { get; set; } // (Add a reference to the Teacher) object doesnt work
+
+        private static Random random = new Random();
+        public string Color { get; set; } = $"#{random.Next(0x1000000):X6}"; // Random color on creation
+
+        public Subject(int id, string name, string description, int teacherId, List<int>? studentsEnrolled = null)
+        {
+            Id = id;
+            Name = name;
+            Description = description;
+            TeacherId = teacherId;
+            StudentsEnrolled = studentsEnrolled;
+        }
     }
 }
