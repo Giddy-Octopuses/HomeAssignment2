@@ -50,7 +50,7 @@ namespace uniManagementApp.ViewModels
             _student = student ?? throw new ArgumentNullException(nameof(student));
 
             EnrolledSubjects = new ObservableCollection<Subject>(
-                dataRepo.Subjects.Where(s => _student.EnrolledSubjects?.Contains(s.Id) ?? false)
+                dataRepo.Subjects?.Where(s => _student.EnrolledSubjects?.Contains(s.Id) ?? false) ?? Enumerable.Empty<Subject>()
             );
 
             AvailableSubjects = new ObservableCollection<Subject>();
@@ -68,7 +68,7 @@ namespace uniManagementApp.ViewModels
         public void RefreshAvailableSubjects()
         {
             AvailableSubjects.Clear();
-            foreach (var subject in dataRepo.Subjects)
+            foreach (var subject in dataRepo.Subjects ?? Enumerable.Empty<Subject>())
             {
                 if (_student.EnrolledSubjects?.Contains(subject.Id) == false)
                 {
@@ -92,7 +92,7 @@ namespace uniManagementApp.ViewModels
             _student.EnrolledSubjects.Add(SelectedSubject.Id);
             EnrolledSubjects.Add(SelectedSubject);
 
-            var studentInRepo = dataRepo.Students.FirstOrDefault(s => s.Id == _student.Id);
+            var studentInRepo = dataRepo.Students?.FirstOrDefault(s => s.Id == _student.Id);
             if (studentInRepo != null)
             {
                 studentInRepo.EnrolledSubjects = new List<int>(_student.EnrolledSubjects);
@@ -124,14 +124,17 @@ namespace uniManagementApp.ViewModels
             _student.EnrolledSubjects?.Remove(id);
             EnrolledSubjects.Remove(SelectedSubject);
 
-            var studentInRepo = dataRepo.Students.FirstOrDefault(s => s.Id == _student.Id);
+            var studentInRepo = dataRepo.Students?.FirstOrDefault(s => s.Id == _student.Id);
             if (studentInRepo != null)
             {
                 studentInRepo.EnrolledSubjects = new List<int>(_student.EnrolledSubjects ?? Enumerable.Empty<int>());
             }
 
             var subject = dataRepo.FindSubject(id);
-            subject?.StudentsEnrolled?.Remove(_student.Id);
+            if (subject?.StudentsEnrolled != null)
+            {
+                subject.StudentsEnrolled.Remove(_student.Id);
+            }
 
             dataRepo.SaveData();
 
@@ -144,9 +147,8 @@ namespace uniManagementApp.ViewModels
 
         private string GetTeacherName(int teacherId)
         {
-            var teacher = dataRepo?.Teachers?.FirstOrDefault(t => t.Subjects.Contains(teacherId));
+            var teacher = dataRepo?.Teachers?.FirstOrDefault(t => t.Subjects?.Contains(teacherId) == true);
             return teacher?.Name ?? "Unknown Teacher";
         }
-
     }
 }
