@@ -35,12 +35,15 @@ namespace uniManagementApp.ViewModels
         [ObservableProperty]
         private string? confirmationMessage;
 
-        public string SubjectDetails => SelectedSubject != null
-            ? $"ID: {SelectedSubject.Id}\nName: {SelectedSubject.Name}\nDescription: {SelectedSubject.Description}"
-            : string.Empty;
-
         [ObservableProperty]
         private int selectedTabIndex;
+
+        public string SubjectDetails => SelectedSubject != null
+            ? $"ID: {SelectedSubject.Id}\n" +
+              $"Name: {SelectedSubject.Name}\n" +
+              $"Description: {SelectedSubject.Description}\n" +
+              $"Teacher: {GetTeacherName(SelectedSubject.TeacherId)}"
+            : string.Empty;
 
         public StudentViewModel(Student student)
         {
@@ -81,87 +84,109 @@ namespace uniManagementApp.ViewModels
         }
 
         [RelayCommand]
-        public void EnrollSubject()
-        {
-            Console.WriteLine("EnrollSubject called");
-            if (SelectedSubject == null || EnrolledSubjects.Any(s => s.Id == SelectedSubject.Id))
-            {
-                ConfirmationMessage = "No subject selected or already enrolled.";
-                OnPropertyChanged(nameof(ConfirmationMessage)); // Notify UI of the change
-                return;
-            }
+public void EnrollSubject()
+{
+    Console.WriteLine("EnrollSubject called");
+    if (SelectedSubject == null || EnrolledSubjects.Any(s => s.Id == SelectedSubject.Id))
+    {
+        ConfirmationMessage = "No subject selected or already enrolled.";
+        OnPropertyChanged(nameof(ConfirmationMessage));
+        return;
+    }
 
-            Console.WriteLine($"Enrolling subject: {SelectedSubject.Name}");
+    Console.WriteLine($"Enrolling subject: {SelectedSubject.Name}");
 
-            // Add the subject to the student's enrolled subjects
-            _student.EnrolledSubjects ??= new List<int>();
-            _student.EnrolledSubjects.Add(SelectedSubject.Id);
-            EnrolledSubjects.Add(SelectedSubject);
+    // Add subject to the student's enrolled subjects
+    _student.EnrolledSubjects ??= new List<int>();
+    _student.EnrolledSubjects.Add(SelectedSubject.Id);
+    EnrolledSubjects.Add(SelectedSubject);
 
-            // Update the subject's list of enrolled students
-            var subject = dataRepo.FindSubject(SelectedSubject.Id);
-            subject?.StudentsEnrolled?.Add(_student.Id);
+    // Update the global student list in dataRepo
+    var studentInRepo = dataRepo.Students.FirstOrDefault(s => s.Id == _student.Id);
+    if (studentInRepo != null)
+    {
+        studentInRepo.EnrolledSubjects = new List<int>(_student.EnrolledSubjects);
+    }
 
-            // Save the updated data
-            dataRepo.SaveData();
-            Console.WriteLine("Data saved");
+    // Update the subject's list of enrolled students
+    var subject = dataRepo.FindSubject(SelectedSubject.Id);
+    subject?.StudentsEnrolled?.Add(_student.Id);
 
-            // Refresh available subjects
-            RefreshAvailableSubjects();
-            ConfirmationMessage = "Subject successfully enrolled!";
-            OnPropertyChanged(nameof(ConfirmationMessage)); // Notify UI of the change
+    // Save the updated data to the JSON file
+    dataRepo.SaveData();
+    Console.WriteLine("Data saved");
 
-            // Notify UI of changes to EnrolledSubjects and AvailableSubjects
-            OnPropertyChanged(nameof(EnrolledSubjects));
-            OnPropertyChanged(nameof(AvailableSubjects));
-            Console.WriteLine("UI updated");
-        }
+    // Refresh available subjects
+    RefreshAvailableSubjects();
+    ConfirmationMessage = "Subject successfully enrolled!";
+    OnPropertyChanged(nameof(ConfirmationMessage));
+
+    // Notify UI of changes
+    OnPropertyChanged(nameof(EnrolledSubjects));
+    OnPropertyChanged(nameof(AvailableSubjects));
+    Console.WriteLine("UI updated");
+}
+
 
         [RelayCommand]
-        public void DropSubject()
-        {
-            Console.WriteLine("DropSubject called");
-            if (SelectedSubject == null || !EnrolledSubjects.Any(s => s.Id == SelectedSubject.Id))
-            {
-                ConfirmationMessage = "No subject selected or not enrolled.";
-                OnPropertyChanged(nameof(ConfirmationMessage)); // Notify UI of the change
-                return;
-            }
+public void DropSubject()
+{
+    Console.WriteLine("DropSubject called");
+    if (SelectedSubject == null || !EnrolledSubjects.Any(s => s.Id == SelectedSubject.Id))
+    {
+        ConfirmationMessage = "No subject selected or not enrolled.";
+        OnPropertyChanged(nameof(ConfirmationMessage));
+        return;
+    }
 
-            Console.WriteLine($"Dropping subject: {SelectedSubject.Name}");
+    Console.WriteLine($"Dropping subject: {SelectedSubject.Name}");
 
-            var id = SelectedSubject.Id;
+    var id = SelectedSubject.Id;
 
-            // Remove the subject from the student's enrolled subjects
-            _student.EnrolledSubjects?.Remove(SelectedSubject.Id);
-            EnrolledSubjects.Remove(SelectedSubject);
-            Console.WriteLine($"Removed subject {id} from student's enrolled subjects");
+    // Remove the subject from the student's enrolled subjects
+    _student.EnrolledSubjects?.Remove(id);
+    EnrolledSubjects.Remove(SelectedSubject);
 
-            // Update the subject's list of enrolled students
-            var subject = dataRepo.FindSubject(id);
-            if (subject != null)
-            {
-                subject.StudentsEnrolled?.Remove(_student.Id);
-                Console.WriteLine($"Removed student {_student.Id} from subject {subject.Id}");
-            }
-            else
-            {
-                Console.WriteLine($"Subject {id} not found");
-            }
+    // Update the global student list in dataRepo
+    var studentInRepo = dataRepo.Students.FirstOrDefault(s => s.Id == _student.Id);
+    if (studentInRepo != null)
+    {
+        studentInRepo.EnrolledSubjects = new List<int>(_student.EnrolledSubjects);
+    }
 
-            // Save the updated data
-            dataRepo.SaveData();
-            Console.WriteLine("Data saved");
+    // Update the subject's list of enrolled students
+    var subject = dataRepo.FindSubject(id);
+    if (subject != null)
+    {
+        subject.StudentsEnrolled?.Remove(_student.Id);
+        Console.WriteLine($"Removed student {_student.Id} from subject {subject.Id}");
+    }
+    else
+    {
+        Console.WriteLine($"Subject {id} not found");
+    }
 
-            // Refresh available subjects
-            RefreshAvailableSubjects();
-            ConfirmationMessage = "Subject successfully dropped!";
-            OnPropertyChanged(nameof(ConfirmationMessage)); // Notify UI of the change
+    // Save the updated data to the JSON file
+    dataRepo.SaveData();
+    Console.WriteLine("Data saved");
 
-            // Notify UI of changes to EnrolledSubjects and AvailableSubjects
-            OnPropertyChanged(nameof(EnrolledSubjects));
-            OnPropertyChanged(nameof(AvailableSubjects));
-            Console.WriteLine("UI updated");
-        }
+    // Refresh available subjects
+    RefreshAvailableSubjects();
+    ConfirmationMessage = "Subject successfully dropped!";
+    OnPropertyChanged(nameof(ConfirmationMessage));
+
+    // Notify UI of changes
+    OnPropertyChanged(nameof(EnrolledSubjects));
+    OnPropertyChanged(nameof(AvailableSubjects));
+    Console.WriteLine("UI updated");
+}
+
+
+       private string GetTeacherName(int teacherId)
+{
+    var teacher = dataRepo.Teachers.FirstOrDefault(t => t.Subjects.Contains(teacherId));
+    return teacher?.Name ?? "Unknown Teacher";
+}
+
     }
 }
