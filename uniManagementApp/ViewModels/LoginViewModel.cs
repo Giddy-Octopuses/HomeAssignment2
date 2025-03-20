@@ -71,7 +71,7 @@ public partial class LoginViewModel : ViewModelBase
             {
                 foreach (var student in dataRepository.Students)
                 {
-                    if (student.Username == Username && student.Password == Password)
+                    if (student.Username == Username && student.VerifyPassword(Password))
                     {
                         ErrorMessage = $"Welcome, {student.Name}!";
                         NavigateToStudentView?.Invoke(student);
@@ -84,7 +84,7 @@ public partial class LoginViewModel : ViewModelBase
             {
                 foreach (var teacher in dataRepository.Teachers)
                 {
-                    if (teacher.Username == Username && teacher.Password == Password)
+                    if (teacher.Username == Username && teacher.VerifyPassword(Password))
                     {
                         ErrorMessage = $"Welcome, {teacher.Name}!";
                         NavigateToTeacherView?.Invoke(teacher);

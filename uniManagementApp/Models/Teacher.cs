@@ -7,7 +7,7 @@ public class Teacher
     public int Id { get; private set; }
     public string Name { get; set;}
     public string Username { get; set;}
-    public string Password { get; set;}
+    public string PasswordHash { get; set; } // Store the hash, not the plain password
     public List<int>? Subjects { get; set; } = []; 
 
     public Teacher(int id, string name, string username, string password, List<int>? subjects = null)
@@ -15,7 +15,13 @@ public class Teacher
         Id = id;
         Name = name;
         Username = username;
-        Password = password;
+        PasswordHash = PasswordHasher.HashPassword(password); // Hash on creation
         Subjects = subjects;
     }
+
+    public bool VerifyPassword(string password)
+    {
+        return PasswordHasher.VerifyPassword(password, PasswordHash);
+    }
+    
 }    

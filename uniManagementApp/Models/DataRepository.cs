@@ -64,26 +64,14 @@ namespace uniManagementApp.Models
 
         public Teacher? FindTeacher(string username, string password)
         {
-            foreach (Teacher teacher in Teachers)
-            {
-                if (teacher.Username == username && teacher.Password == password)
-                {
-                    return teacher;
-                }
-            }
-            return null;
+            return Teachers.FirstOrDefault(t => 
+                    t.Username == username && t.VerifyPassword(password));
         }
 
         public Student? FindStudent(string username, string password)
         {
-            foreach (Student student in Students)
-            {
-                if (student.Username == username && student.Password == password)
-                {
-                    return student;
-                }
-            }
-            return null;
+            return Students.FirstOrDefault(s => 
+                    s.Username == username && s.VerifyPassword(password));
         }
 
         public Subject? FindSubject(int id)
