@@ -1,5 +1,6 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converters="clr-namespace:uniManagementApp.Converters"
              x:Class="uniManagementApp.App"
              xmlns:local="using:uniManagementApp"
              RequestedThemeVariant="Default">
@@ -9,6 +10,10 @@
         <local:ViewLocator/>
     </Application.DataTemplates>
   
+    <Application.Resources>
+        <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+    </Application.Resources>
+
     <Application.Styles>
         <FluentTheme />
     </Application.Styles>

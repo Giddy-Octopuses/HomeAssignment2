@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -20,7 +21,7 @@ namespace uniManagementApp.Models
             LoadData();
         }
 
-        private void LoadData()
+        public void LoadData()
         {
             try
             {
@@ -61,7 +62,7 @@ namespace uniManagementApp.Models
             }
         }
 
-        public Teacher FindTeacher(string username, string password)
+        public Teacher? FindTeacher(string username, string password)
         {
             foreach (Teacher teacher in Teachers)
             {
@@ -73,7 +74,7 @@ namespace uniManagementApp.Models
             return null;
         }
 
-        public Student FindStudent(string username, string password)
+        public Student? FindStudent(string username, string password)
         {
             foreach (Student student in Students)
             {
@@ -85,7 +86,7 @@ namespace uniManagementApp.Models
             return null;
         }
 
-        public Subject FindSubject(int id)
+        public Subject? FindSubject(int id)
         {
             foreach (Subject subject in Subjects)
             {
@@ -102,13 +103,25 @@ namespace uniManagementApp.Models
             // Add subject to teacher
             SaveData();
         }
-    }
+        // Move LoadSubjectById method inside the DataRepository class
+        public Subject? LoadSubjectById(int subjectId)
+        {
+            foreach (var subject in Subjects)
+        {
+                if (string.IsNullOrEmpty(subject.Color))
+            {
+                    subject.Color = $"#{new Random().Next(0x1000000):X6}";
+            }
+        }
 
+            return Subjects.FirstOrDefault(s => s.Id == subjectId);
+        }
+
+    }
     public class JsonDataStructure
     {
         public List<Subject>? Subjects { get; set; }
         public List<Student>? Students { get; set; }
         public List<Teacher>? Teachers { get; set; }
     }
-
 }
