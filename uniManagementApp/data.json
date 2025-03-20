@@ -6,13 +6,20 @@
       "Description": "Mathematics is the study of numbers, shapes and patterns.",
       "TeacherId": 1,
       "StudentsEnrolled": [
-        1
+        111222
       ]
+    },
+    {
+      "Id": 2,
+      "Name": "Physics",
+      "Description": "Physics is the study of matter, energy, and the fundamental forces of nature, exploring how they interact and govern the universe.",
+      "TeacherId": 2,
+      "StudentsEnrolled": []
     }
   ],
   "Students": [
     {
-      "Id": 1,
+      "Id": 111222,
       "Name": "John",
       "Username": "john123",
       "Password": "john123",
@@ -21,7 +28,7 @@
       ]
     },
     {
-      "Id": 2,
+      "Id": 222111,
       "Name": "Jane",
       "Username": "jane123",
       "Password": "jane123",
@@ -30,12 +37,21 @@
   ],
   "Teachers": [
     {
-      "Id": 1,
+      "Id": 123456,
       "Name": "Mr. Smith",
       "Username": "smith123",
       "Password": "smith123",
       "Subjects": [
         1
+      ]
+    },
+    {
+      "Id": 234567,
+      "Name": "Mr. Nora",
+      "Username": "nora123",
+      "Password": "nora123",
+      "Subjects": [
+        2
       ]
     }
   ]

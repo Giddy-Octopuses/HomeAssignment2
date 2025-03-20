@@ -1,15 +1,62 @@
 <UserControl xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:uniManagementApp.ViewModels"
-        x:Class="uniManagementApp.Views.StudentView"
-        x:DataType="vm:StudentViewModel">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:uniManagementApp.ViewModels"
+             xmlns:converters="using:uniManagementApp.Converters"
+             xmlns:av="clr-namespace:Avalonia;assembly=Avalonia.Base"
+             x:Class="uniManagementApp.Views.StudentView"
+             x:DataType="vm:StudentViewModel">
 
-    <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:StudentViewModel/>
-    </Design.DataContext>
+    <UserControl.Resources>
+        <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+    </UserControl.Resources>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    <StackPanel HorizontalAlignment="Left">
+        <TabControl SelectedIndex="{Binding SelectedTabIndex}">
+            <!-- Enrolled Subjects Tab -->
+            <TabItem Header="Enrolled Subjects">
+                <StackPanel HorizontalAlignment="Left">
+                    <ListBox ItemsSource="{Binding EnrolledSubjects}"
+                             SelectedItem="{Binding SelectedSubject}"
+                             SelectionMode="Single,Toggle"
+                             Width="200"
+                             HorizontalAlignment="Left">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="{Binding Color}" CornerRadius="1" Margin="0.5" Padding="1" Width="180">
+                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"/>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
 
+                    <TextBlock Text="{Binding SubjectDetails}" HorizontalAlignment="Left"/>
+                    <Button Content="Drop"
+                            Command="{Binding DropSubjectCommand}" HorizontalAlignment="Left"/>
+                </StackPanel>
+            </TabItem>
+
+            <!-- Available Subjects Tab -->
+            <TabItem Header="Available Subjects">
+                <StackPanel HorizontalAlignment="Left">
+                    <ListBox ItemsSource="{Binding AvailableSubjects}"
+                             SelectedItem="{Binding SelectedSubject}"
+                             SelectionMode="Single,Toggle"
+                             Width="200"
+                             HorizontalAlignment="Left">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="{Binding Color}" CornerRadius="1" Margin="0.5" Padding="1" Width="180">
+                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"/>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                    <TextBlock Text="{Binding SubjectDetails}" HorizontalAlignment="Left"/>
+                    <Button Content="Enroll"
+                            Command="{Binding EnrollSubjectCommand}" HorizontalAlignment="Left"/>
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+    </StackPanel>
 </UserControl>
