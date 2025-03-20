@@ -46,7 +46,8 @@ namespace uniManagementApp.Models
         }
 
 
-        public void SaveData( string filepath )
+       // FROM HASHING: public void SaveData( string filepath )
+        public void SaveData(string DataFilePath)
         {
             try
             {
@@ -98,6 +99,16 @@ namespace uniManagementApp.Models
             }
             return null;
         }
+
+
+        public void CreateSubject(Teacher teacher, Subject subject)
+        {
+            // Add subject to teacher
+            teacher.Subjects.Add(subject.Id);
+            Subjects.Add(subject);
+            SaveData(DataFilePath);
+        }
+        // Move LoadSubjectById method inside the DataRepository class
 
         public Subject? LoadSubjectById(int subjectId)
         {

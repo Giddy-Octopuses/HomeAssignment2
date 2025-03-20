@@ -124,7 +124,7 @@ namespace uniManagementApp.ViewModels
             var orderedSubjects = new ObservableCollection<Subject>(_dataRepository.Subjects.OrderBy(s => s.Id));
             _dataRepository.Subjects = orderedSubjects;
 
-            _dataRepository.SaveData();
+            _dataRepository.SaveData("data.json");
 
             EditSubjectStackPanelVisible = false;
 
@@ -153,7 +153,7 @@ namespace uniManagementApp.ViewModels
                 }
                 SelectedSubject = null;
 
-                _dataRepository.SaveData();
+                _dataRepository.SaveData("data.json");
 
                 // Show the popup for 3 seconds
                 PopupOpen = true;
@@ -204,7 +204,7 @@ namespace uniManagementApp.ViewModels
 
             NewSubjectName = NewSubjectDescription = null;
 
-            _dataRepository.SaveData();
+            _dataRepository.SaveData("data.json");
 
             NewSubjectStackPanelVisible = false;
 
