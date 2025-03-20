@@ -32,6 +32,11 @@
                     <TextBlock Text="{Binding SubjectDetails}" HorizontalAlignment="Left"/>
                     <Button Content="Drop"
                             Command="{Binding DropSubjectCommand}" HorizontalAlignment="Left"/>
+                    <Popup Name="PopupDrop" IsLightDismissEnabled="True" IsOpen="{Binding PopupDropOpen}">    
+                        <Border BorderThickness="0.75" BorderBrush="Black" Padding="6,3" Background="White">
+                            <TextBlock Text="{Binding MessageDrop}" Foreground="{Binding ColourDrop}"/>
+                        </Border>
+                    </Popup>        
                 </StackPanel>
             </TabItem>
 
@@ -55,6 +60,11 @@
                     <TextBlock Text="{Binding SubjectDetails}" HorizontalAlignment="Left"/>
                     <Button Content="Enroll"
                             Command="{Binding EnrollSubjectCommand}" HorizontalAlignment="Left"/>
+                    <Popup Name="PopupEnroll" IsLightDismissEnabled="True" IsOpen="{Binding PopupEnrollOpen}">    
+                        <Border BorderThickness="0.75" BorderBrush="Black" Padding="6,3" Background="White">
+                            <TextBlock Text="{Binding MessageEnroll}" Foreground="{Binding ColourEnroll}"/>
+                        </Border>
+                    </Popup>        
                 </StackPanel>
             </TabItem>
         </TabControl>
