@@ -11,6 +11,7 @@
     - Login view
     - set up JSON
     - set up tests
+    - hashing
 - Gabija:
     - Student view
     - set up tests
