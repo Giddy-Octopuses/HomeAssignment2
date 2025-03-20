@@ -11,8 +11,8 @@ namespace uniManagementApp.Tests
     public class LoginViewTests
     {
         private const string ValidJson = @"{ ""Subjects"": [{ ""Id"": 1, ""Name"": ""Math"", ""Description"": ""Mathematics is the study of numbers, shapes and patterns."", ""TeacherId"": 1, ""StudentsEnrolled"": [1] }], 
-                                            ""Students"": [{ ""Id"": 1, ""Name"": ""Steve"", ""Username"": ""john123"", ""Password"": ""john123"", ""EnrolledSubjects"": [1] }, { ""Id"": 2, ""Name"": ""Jane"", ""Username"": ""jane123"", ""Password"": ""jane123"", ""EnrolledSubjects"": [] }], 
-                                            ""Teachers"": [{ ""Id"": 1, ""Name"": ""Mr. Schmidt"", ""Username"": ""smith123"", ""Password"": ""smith123"", ""Subjects"": [1] }] }";
+                                            ""Students"": [{ ""Id"": 1, ""Name"": ""Steve"", ""Username"": ""john123"", ""Password"": ""uGZCxIdmsEtg/SoUKbdMVg==:bj5u+2ojAhprGYwAAU2YPDtsbi/TjKztos3lBnzt3Ao="", ""EnrolledSubjects"": [1] }, { ""Id"": 2, ""Name"": ""Jane"", ""Username"": ""jane123"", ""Password"": ""3et5M7RFyxTbtdAEa6RwYA==:+gxdTzOWFHW5luBwmXdw0Si82GvjtE/IPUoH64i9ReY="", ""EnrolledSubjects"": [] }], 
+                                            ""Teachers"": [{ ""Id"": 1, ""Name"": ""Mr. Schmidt"", ""Username"": ""smith123"", ""Password"": ""NIW+007DsVT+njlTpIx65Q==:gL+fCfpyB0MeKA119dGUsNsAEYImRCoKcD33ILC7tYk="", ""Subjects"": [1] }] }";
 
         [AvaloniaFact]
         public void Login_WithValidStudentCredentials_ShouldSucceed()

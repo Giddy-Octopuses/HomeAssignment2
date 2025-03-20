@@ -20,8 +20,7 @@ namespace uniManagementApp.Tests
         public void DataRepository_Constructor_ShouldSucceed()
         {
             // Arrange
-            var dataRepository = new DataRepository();
-            dataRepository.LoadData(filePath);
+            var dataRepository = new DataRepository("test.json");
             
             // Assert
             Assert.NotNull(dataRepository.Subjects);
