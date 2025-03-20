@@ -1,99 +1,279 @@
-using System.Collections.ObjectModel;
-using Moq;
-using uniManagementApp.Models;
+using Avalonia.Controls;
+using Avalonia.Headless;
+using Avalonia.Input;
+using Avalonia.Headless.XUnit;
 using uniManagementApp.ViewModels;
+using uniManagementApp.Views;
 using Xunit;
 
 namespace uniManagementApp.Tests
 {
-    public class LoginViewModelTests
+    public class LoginViewTests
     {
-        private readonly Mock<IDataRepository> _mockRepository;
-        private readonly LoginViewModel _loginViewModel;
+        private const string ValidJson = @"{ ""Subjects"": [{ ""Id"": 1, ""Name"": ""Math"", ""Description"": ""Mathematics is the study of numbers, shapes and patterns."", ""TeacherId"": 1, ""StudentsEnrolled"": [1] }], 
+                                            ""Students"": [{ ""Id"": 1, ""Name"": ""Steve"", ""Username"": ""john123"", ""Password"": ""john123"", ""EnrolledSubjects"": [1] }, { ""Id"": 2, ""Name"": ""Jane"", ""Username"": ""jane123"", ""Password"": ""jane123"", ""EnrolledSubjects"": [] }], 
+                                            ""Teachers"": [{ ""Id"": 1, ""Name"": ""Mr. Schmidt"", ""Username"": ""smith123"", ""Password"": ""smith123"", ""Subjects"": [1] }] }";
 
-        // Constructor should not have a return type (void is implied for constructors)
-        public LoginViewModelTests()
-        {
-            // Setup mock data
-            _mockRepository = new Mock<IDataRepository>();
-
-            var students = new ObservableCollection<Student>
-            {
-                new Student( 1, "Alice", "alice123", "pass123" ) 
-            };
-
-            var teachers = new ObservableCollection<Teacher>
-            {
-                new Teacher ( 1, "Mr. Smith", "smith", "teach123" )
-            };
-
-            // Setup mocked repository to return the test data
-            _mockRepository.Setup(repo => repo.Students).Returns(students);
-            _mockRepository.Setup(repo => repo.Teachers).Returns(teachers);
-
-            // Create instance of LoginViewModel with the mock repository
-            _loginViewModel = new LoginViewModel();
-            _loginViewModel.dataRepository = _mockRepository.Object;
-        }
-
-        [Fact]
+        [AvaloniaFact]
         public void Login_WithValidStudentCredentials_ShouldSucceed()
         {
             // Arrange
-            _loginViewModel.Username = "alice123";
-            _loginViewModel.Password = "pass123";
-            _loginViewModel.IsStudent = true;
+            var window = new MainWindow()
+            {
+                DataContext = new MainWindowViewModel()
+            };
+            window.Show();
+
+            var mainWindowViewModel = window.DataContext as MainWindowViewModel;
+            Assert.NotNull(mainWindowViewModel);
+            Assert.IsType<LoginView>(mainWindowViewModel.CurrentView);
+
+            var loginView = (LoginView)mainWindowViewModel.CurrentView;
+            var loginViewModel = loginView.DataContext as LoginViewModel;
+            Assert.NotNull(loginViewModel);
+
+            var filePath = "test.json";
+            File.WriteAllText(filePath, ValidJson);
+            loginViewModel.dataRepository.LoadData(filePath);
 
             // Act
-            _loginViewModel.Login();
+            var usernameTextBox = loginView.FindControl<TextBox>("UsernameTextBox");
+            Assert.NotNull(usernameTextBox);
+            usernameTextBox.Focus();
+            window.KeyTextInput("john123");
+
+            var passwordTextBox = loginView.FindControl<TextBox>("PasswordTextBox");
+            Assert.NotNull(passwordTextBox);
+            passwordTextBox.Focus();
+            window.KeyTextInput("john123");
+
+            var loginButton = loginView.FindControl<Button>("LoginButton");
+            Assert.NotNull(loginButton);
+            loginButton.Focus();
+            window.KeyPressQwerty(PhysicalKey.Enter, RawInputModifiers.None);
 
             // Assert
-            Assert.Equal("Welcome, Alice!", _loginViewModel.ErrorMessage);
+            var errorMessageTextBlock = loginView.FindControl<TextBlock>("ErrorMessageTextBlock");
+            Assert.NotNull(errorMessageTextBlock);
+            Assert.Equal("Welcome, Steve!", errorMessageTextBlock.Text);
         }
 
-        [Fact]
+        [AvaloniaFact]
         public void Login_WithValidTeacherCredentials_ShouldSucceed()
         {
             // Arrange
-            _loginViewModel.Username = "smith";
-            _loginViewModel.Password = "teach123";
-            _loginViewModel.IsTeacher = true;
+            var window = new MainWindow()
+            {
+                DataContext = new MainWindowViewModel()
+            };
+            window.Show();
+
+            var mainWindowViewModel = window.DataContext as MainWindowViewModel;
+            Assert.NotNull(mainWindowViewModel);
+            Assert.IsType<LoginView>(mainWindowViewModel.CurrentView);
+
+            var loginView = (LoginView)mainWindowViewModel.CurrentView;
+            var loginViewModel = loginView.DataContext as LoginViewModel;
+            Assert.NotNull(loginViewModel);
+
+            var filePath = "test.json";
+            File.WriteAllText(filePath, ValidJson);
+            loginViewModel.dataRepository.LoadData(filePath);
+
+            var teacherRadioButton = loginView.FindControl<RadioButton>("TeacherRadioButton");
+            Assert.NotNull(teacherRadioButton);
+            teacherRadioButton.IsChecked = true;
 
             // Act
-            _loginViewModel.Login();
+            var usernameTextBox = loginView.FindControl<TextBox>("UsernameTextBox");
+            Assert.NotNull(usernameTextBox);
+            usernameTextBox.Focus();
+            window.KeyTextInput("smith123");
+
+            var passwordTextBox = loginView.FindControl<TextBox>("PasswordTextBox");
+            Assert.NotNull(passwordTextBox);
+            passwordTextBox.Focus();
+            window.KeyTextInput("smith123");
+
+            var loginButton = loginView.FindControl<Button>("LoginButton");
+            Assert.NotNull(loginButton);
+            loginButton.Focus();
+            window.KeyPressQwerty(PhysicalKey.Enter, RawInputModifiers.None);
 
             // Assert
-            Assert.Equal("Welcome, Mr. Smith!", _loginViewModel.ErrorMessage);
+            var errorMessageTextBlock = loginView.FindControl<TextBlock>("ErrorMessageTextBlock");
+            Assert.NotNull(errorMessageTextBlock);
+            Assert.Equal("Welcome, Mr. Schmidt!", errorMessageTextBlock.Text);
         }
 
-        [Fact]
-        public void Login_WithInvalidCredentials_ShouldFail()
+        [AvaloniaFact]
+        public void Login_WithInvalidCredentials_ShouldShowError()
         {
             // Arrange
-            _loginViewModel.Username = "invalid_user";
-            _loginViewModel.Password = "wrong_pass";
-            _loginViewModel.IsStudent = true;
+            var window = new MainWindow()
+            {
+                DataContext = new MainWindowViewModel()
+            };
+            window.Show();
+
+            var mainWindowViewModel = window.DataContext as MainWindowViewModel;
+            Assert.NotNull(mainWindowViewModel);
+            Assert.IsType<LoginView>(mainWindowViewModel.CurrentView);
+
+            var loginView = (LoginView)mainWindowViewModel.CurrentView;
+            var loginViewModel = loginView.DataContext as LoginViewModel;
+            Assert.NotNull(loginViewModel);
+
+            var filePath = "test.json";
+            File.WriteAllText(filePath, ValidJson);
+            loginViewModel.dataRepository.LoadData(filePath);
 
             // Act
-            _loginViewModel.Login();
+            var usernameTextBox = loginView.FindControl<TextBox>("UsernameTextBox");
+            Assert.NotNull(usernameTextBox);
+            usernameTextBox.Focus();
+            window.KeyTextInput("wrong_user");
+
+            var passwordTextBox = loginView.FindControl<TextBox>("PasswordTextBox");
+            Assert.NotNull(passwordTextBox);
+            passwordTextBox.Focus();
+            window.KeyTextInput("wrong_pass");
+
+            var loginButton = loginView.FindControl<Button>("LoginButton");
+            Assert.NotNull(loginButton);
+            loginButton.Focus();
+            window.KeyPressQwerty(PhysicalKey.Enter, RawInputModifiers.None);
 
             // Assert
-            Assert.Equal("Invalid username or password!", _loginViewModel.ErrorMessage);
+            var errorMessageTextBlock = loginView.FindControl<TextBlock>("ErrorMessageTextBlock");
+            Assert.NotNull(errorMessageTextBlock);
+            Assert.Equal("Invalid username or password!", errorMessageTextBlock.Text);
         }
 
-        [Fact]
-        public void Login_WithEmptyFields_ShouldFail()
+        [AvaloniaFact]
+        public void Login_WithEmptyFields_ShouldShowError()
         {
             // Arrange
-            _loginViewModel.Username = "";
-            _loginViewModel.Password = "";
-            _loginViewModel.IsStudent = true;
+            var window = new MainWindow()
+            {
+                DataContext = new MainWindowViewModel()
+            };
+            window.Show();
+
+            var mainWindowViewModel = window.DataContext as MainWindowViewModel;
+            Assert.NotNull(mainWindowViewModel);
+            Assert.IsType<LoginView>(mainWindowViewModel.CurrentView);
+
+            var loginView = (LoginView)mainWindowViewModel.CurrentView;
+            var loginViewModel = loginView.DataContext as LoginViewModel;
+            Assert.NotNull(loginViewModel);
+
+            var filePath = "test.json";
+            File.WriteAllText(filePath, ValidJson);
+            loginViewModel.dataRepository.LoadData(filePath);
 
             // Act
-            _loginViewModel.Login();
+            var loginButton = loginView.FindControl<Button>("LoginButton");
+            Assert.NotNull(loginButton);
+            loginButton.Focus();
+            window.KeyPressQwerty(PhysicalKey.Enter, RawInputModifiers.None);
 
             // Assert
-            Assert.Equal("Please fill in all fields.", _loginViewModel.ErrorMessage);
+            var errorMessageTextBlock = loginView.FindControl<TextBlock>("ErrorMessageTextBlock");
+            Assert.NotNull(errorMessageTextBlock);
+            Assert.Equal("Please fill in all fields.", errorMessageTextBlock.Text);
+        }
+
+        [AvaloniaFact]
+        public void Login_StudentWithTeacherCredentials_ShouldShowError()
+        {
+            // Arrange
+            var window = new MainWindow()
+            {
+                DataContext = new MainWindowViewModel()
+            };
+            window.Show();
+
+            var mainWindowViewModel = window.DataContext as MainWindowViewModel;
+            Assert.NotNull(mainWindowViewModel);
+            Assert.IsType<LoginView>(mainWindowViewModel.CurrentView);
+
+            var loginView = (LoginView)mainWindowViewModel.CurrentView;
+            var loginViewModel = loginView.DataContext as LoginViewModel;
+            Assert.NotNull(loginViewModel);
+
+            var filePath = "test.json";
+            File.WriteAllText(filePath, ValidJson);
+            loginViewModel.dataRepository.LoadData(filePath);
+
+            // Act
+            var usernameTextBox = loginView.FindControl<TextBox>("UsernameTextBox");
+            Assert.NotNull(usernameTextBox);
+            usernameTextBox.Focus();
+            window.KeyTextInput("smith123");
+
+            var passwordTextBox = loginView.FindControl<TextBox>("PasswordTextBox");
+            Assert.NotNull(passwordTextBox);
+            passwordTextBox.Focus();
+            window.KeyTextInput("smith123");
+
+            var loginButton = loginView.FindControl<Button>("LoginButton");
+            Assert.NotNull(loginButton);
+            loginButton.Focus();
+            window.KeyPressQwerty(PhysicalKey.Enter, RawInputModifiers.None);
+
+            // Assert
+            var errorMessageTextBlock = loginView.FindControl<TextBlock>("ErrorMessageTextBlock");
+            Assert.NotNull(errorMessageTextBlock);
+            Assert.Equal("Invalid username or password!", errorMessageTextBlock.Text);
+        }
+
+        [AvaloniaFact]
+        public void Login_TeacherWithStudentCredentials_ShouldShowError()
+        {
+            // Arrange
+            var window = new MainWindow()
+            {
+                DataContext = new MainWindowViewModel()
+            };
+            window.Show();
+
+            var mainWindowViewModel = window.DataContext as MainWindowViewModel;
+            Assert.NotNull(mainWindowViewModel);
+            Assert.IsType<LoginView>(mainWindowViewModel.CurrentView);
+
+            var loginView = (LoginView)mainWindowViewModel.CurrentView;
+            var loginViewModel = loginView.DataContext as LoginViewModel;
+            Assert.NotNull(loginViewModel);
+
+            var filePath = "test.json";
+            File.WriteAllText(filePath, ValidJson);
+            loginViewModel.dataRepository.LoadData(filePath);
+
+            var teacherRadioButton = loginView.FindControl<RadioButton>("TeacherRadioButton");
+            Assert.NotNull(teacherRadioButton);
+            teacherRadioButton.IsChecked = true;
+
+            // Act
+            var usernameTextBox = loginView.FindControl<TextBox>("UsernameTextBox");
+            Assert.NotNull(usernameTextBox);
+            usernameTextBox.Focus();
+            window.KeyTextInput("john123");
+
+            var passwordTextBox = loginView.FindControl<TextBox>("PasswordTextBox");
+            Assert.NotNull(passwordTextBox);
+            passwordTextBox.Focus();
+            window.KeyTextInput("john123");
+
+            var loginButton = loginView.FindControl<Button>("LoginButton");
+            Assert.NotNull(loginButton);
+            loginButton.Focus();
+            window.KeyPressQwerty(PhysicalKey.Enter, RawInputModifiers.None);
+
+            // Assert
+            var errorMessageTextBlock = loginView.FindControl<TextBlock>("ErrorMessageTextBlock");
+            Assert.NotNull(errorMessageTextBlock);
+            Assert.Equal("Invalid username or password!", errorMessageTextBlock.Text);
         }
     }
 }

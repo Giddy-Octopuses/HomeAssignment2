@@ -18,10 +18,11 @@ namespace uniManagementApp.Models
 
         public DataRepository()
         {
-            LoadData();
+            LoadData(FilePath);
         }
 
-        public void LoadData()
+        public void LoadData(string DataFilePath)
+        // or: public void LoadData()   ?
         {
             try
             {
@@ -45,7 +46,7 @@ namespace uniManagementApp.Models
             }
         }
 
-        public void SaveData()
+        public void SaveData( string DataFilePath)
         {
             try
             {
@@ -101,7 +102,9 @@ namespace uniManagementApp.Models
         public void CreateSubject(Teacher teacher, Subject subject)
         {
             // Add subject to teacher
-            SaveData();
+            teacher.Subjects.Add(subject.Id);
+            Subjects.Add(subject);
+            SaveData(FilePath);
         }
         // Move LoadSubjectById method inside the DataRepository class
         public Subject? LoadSubjectById(int subjectId)
