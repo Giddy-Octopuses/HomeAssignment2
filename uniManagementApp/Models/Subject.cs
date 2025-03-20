@@ -22,11 +22,11 @@ namespace uniManagementApp.Models
             Description = description;
             TeacherId = teacherId;
             StudentsEnrolled = studentsEnrolled;
-        }   
+        }
 
         public override string ToString()
         {
-                return $"{Name}";
+            return $"{Name}";
         }
     }
 }

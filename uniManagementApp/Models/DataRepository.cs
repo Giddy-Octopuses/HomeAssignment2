@@ -115,7 +115,7 @@ namespace uniManagementApp.Models
             Subjects.Add(subject);
             SaveData(DataFilePath);
         }
-        
+
         // Move LoadSubjectById method inside the DataRepository class
         public Subject? LoadSubjectById(int subjectId)
         {

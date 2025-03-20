@@ -37,7 +37,7 @@ public partial class LoginViewModel : ViewModelBase
     public bool IsStudent
     {
         get => _isStudent;
-        set 
+        set
         {
             SetProperty(ref _isStudent, value);
             if (value)
@@ -50,7 +50,7 @@ public partial class LoginViewModel : ViewModelBase
     public bool IsTeacher
     {
         get => _isTeacher;
-        set 
+        set
         {
             SetProperty(ref _isTeacher, value);
             if (value)
@@ -78,7 +78,7 @@ public partial class LoginViewModel : ViewModelBase
                         return;
                     }
                 }
-                
+
             }
             else if (IsTeacher)
             {
