@@ -8,7 +8,7 @@ namespace uniManagementApp.Models
         public int Id { get; init; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public int TeacherId { get; private set; }
+        public int TeacherId { get; set; }
         public List<int>? StudentsEnrolled { get; set; }
         public Teacher? Teacher { get; set; } // Add a reference to the Teacher object
 

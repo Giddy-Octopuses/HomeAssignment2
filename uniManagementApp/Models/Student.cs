@@ -1,10 +1,10 @@
-using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using System.Collections.Generic;
 namespace uniManagementApp.Models;
 
 public class Student
 {
-    public int Id { get; private set; }
+    public int Id { get; set; } // Allow setting during deserialization
     public string Name { get; set; }
     public string Username { get; set; }
     [JsonPropertyName("Password")]

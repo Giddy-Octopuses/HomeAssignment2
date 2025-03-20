@@ -4,7 +4,7 @@ namespace uniManagementApp.Models;
 
 public class Teacher
 {
-    public int Id { get; private set; }
+    public int Id { get; set; }
     public string Name { get; set;}
     public string Username { get; set;}
     [JsonPropertyName("Password")]

@@ -22,7 +22,7 @@ namespace uniManagementApp.Models
             LoadData(DataFilePath);
         }
 
-        public void LoadData( string filepath )
+        public void LoadData(string filepath)
         {
             try
             {
@@ -53,6 +53,15 @@ namespace uniManagementApp.Models
                 JsonData.Subjects = new List<Subject>(Subjects);
                 JsonData.Students = new List<Student>(Students);
                 JsonData.Teachers = new List<Teacher>(Teachers);
+
+                // Ensure TeacherId is preserved
+                foreach (var subject in JsonData.Subjects)
+                {
+                    if (subject.TeacherId == 0 && subject.Teacher != null)
+                    {
+                        subject.TeacherId = subject.Teacher.Id;
+                    }
+                }
 
                 var json = JsonSerializer.Serialize(JsonData, new JsonSerializerOptions { WriteIndented = true });
                 File.WriteAllText(filepath, json);
@@ -99,7 +108,6 @@ namespace uniManagementApp.Models
             return null;
         }
 
-
         public void CreateSubject(Teacher teacher, Subject subject)
         {
             // Add subject to teacher
@@ -112,16 +120,15 @@ namespace uniManagementApp.Models
         public Subject? LoadSubjectById(int subjectId)
         {
             foreach (var subject in Subjects)
-        {
-                if (string.IsNullOrEmpty(subject.Color))
             {
+                if (string.IsNullOrEmpty(subject.Color))
+                {
                     subject.Color = $"#{new Random().Next(0x1000000):X6}";
+                }
             }
-        }
 
             return Subjects.FirstOrDefault(s => s.Id == subjectId);
         }
-
     }
     public class JsonDataStructure
     {
