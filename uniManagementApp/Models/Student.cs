@@ -5,10 +5,10 @@ namespace uniManagementApp.Models;
 public class Student
 {
     public int Id { get; set; } // Allow setting during deserialization
-    public required string Name { get; set; } = string.Empty;
-    public required string Username { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
+    public string Username { get; set; } = string.Empty;
     [JsonPropertyName("Password")]
-    public required string PasswordHash { get; set; } = string.Empty; // Store the hash, not the plain password
+    public string PasswordHash { get; set; } = string.Empty; // Store the hash, not the plain password
     public List<int>? EnrolledSubjects { get; set; } = [];
 
     // Parameterless constructor for deserialization
