@@ -101,7 +101,7 @@ namespace uniManagementApp.ViewModels
             var subject = dataRepo.FindSubject(SelectedSubject.Id);
             subject?.StudentsEnrolled?.Add(_student.Id);
 
-            dataRepo.SaveData();
+            dataRepo.SaveData(dataRepo.DataFilePath);
 
             RefreshAvailableSubjects();
             ConfirmationMessage = "Subject successfully enrolled!";
@@ -136,7 +136,7 @@ namespace uniManagementApp.ViewModels
                 subject.StudentsEnrolled.Remove(_student.Id);
             }
 
-            dataRepo.SaveData();
+            dataRepo.SaveData(dataRepo.DataFilePath);
 
             RefreshAvailableSubjects();
             ConfirmationMessage = "Subject successfully dropped!";
