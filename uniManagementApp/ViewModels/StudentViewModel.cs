@@ -199,4 +199,3 @@ namespace uniManagementApp.ViewModels
         }
     }
 }
-}
