@@ -1,8 +1,13 @@
 <UserControl xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:uniManagementApp.ViewModels"
-        x:Class="uniManagementApp.Views.TeacherView"
-        x:DataType="vm:TeacherViewModel">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:uniManagementApp.ViewModels"
+             xmlns:local="clr-namespace:uniManagementApp.ViewModels"
+             x:Class="uniManagementApp.Views.TeacherView"
+             x:DataType="vm:TeacherViewModel">
+
+    <UserControl.Resources>
+        <local:NullToBoolConverter x:Key="NullToBoolConverter"/>
+    </UserControl.Resources>
 
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
@@ -10,6 +15,67 @@
         <vm:TeacherViewModel/>
     </Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    <StackPanel>
+        <TextBlock FontStyle="Italic">My Subjects</TextBlock>
+        <TextBlock>
+            <TextBlock.Text>
+                <MultiBinding StringFormat="Signed in as {0}">
+                    <Binding Path="Teacher.Name"/>
+                </MultiBinding>
+            </TextBlock.Text>
+        </TextBlock>
+        <ListBox Name="MySubjectsListBox" ItemsSource="{Binding SubjectAll}" SelectedItem="{Binding SelectedSubject}" SelectionMode="Single,Toggle"/>
+        <StackPanel x:Name="ViewExistingSubject" IsVisible="{Binding SelectedSubject, Converter={StaticResource NullToBoolConverter}}"> 
+            <TextBlock>Subject details:</TextBlock>
+            <TextBlock>
+                <Run FontWeight="Bold" Text="ID: " />
+                <Run Text="{Binding SelectedSubject.Id}" />
+            </TextBlock>
+            <TextBlock>
+                <Run FontWeight="Bold" Text="Name: " />
+                <Run Text="{Binding SelectedSubject}" />
+            </TextBlock>
+            <TextBlock>
+                <Run FontWeight="Bold" Text="Description: " />
+                <Run Text="{Binding SelectedSubject.Description}" />
+            </TextBlock>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                <Button Command="{Binding EditSubject}">Edit Subject</Button>
+                <Button Command="{Binding DeleteSubject}">Delete Subject</Button>
+            </StackPanel>
+            <StackPanel x:Name="EditOldSubject" IsVisible="{Binding EditSubjectStackPanelVisible}">
+                <TextBlock>Edit subject details:</TextBlock>
+                <TextBlock>Name:</TextBlock>
+                <TextBox Text="{Binding SelectedSubject.Name}" Watermark="Enter the name of the subject"/>
+                <TextBlock>Short description:</TextBlock>
+                <TextBox Text="{Binding SelectedSubject.Description}" Watermark="Enter a short description of the subject" Height="60" AcceptsReturn="True" TextWrapping="Wrap"/>
+                <Button Command="{Binding Save2}">Save</Button>
+            </StackPanel>    
+            <Popup Name="Popup3" IsLightDismissEnabled="True" IsOpen="{Binding Popup3Open}">    
+                <Border BorderThickness="0.75" BorderBrush="Black" Padding="6,3" Background="White">
+                    <TextBlock Text="{Binding Message3}" Foreground="{Binding Colour3}"/>
+                </Border>
+            </Popup>
+            <Popup Name="Popup" IsLightDismissEnabled="True" IsOpen="{Binding PopupOpen}">    
+                <Border BorderThickness="0.75" BorderBrush="Black" Padding="6,3" Background="White">
+                    <TextBlock Text="The subject was deleted successfully." Foreground="Green"/>
+                </Border>
+            </Popup>
+        </StackPanel>    
+        <Button Command="{Binding AddSubject}">Create new subject</Button>
+        <StackPanel x:Name="CreateNewSubject" IsVisible="{Binding NewSubjectStackPanelVisible}">
+            <TextBlock>Enter subject details:</TextBlock>
+            <TextBlock>Name:</TextBlock>
+            <TextBox Text="{Binding NewSubjectName}" Watermark="Enter the name of the subject"/>
+            <TextBlock>Short description:</TextBlock>
+            <TextBox Text="{Binding NewSubjectDescription}" Watermark="Enter a short description of the subject" Height="60" AcceptsReturn="True" TextWrapping="Wrap"/>
+            <Button Command="{Binding Save}">Save</Button>
+            <Popup Name="Popup2" IsLightDismissEnabled="True" IsOpen="{Binding Popup2Open}">    
+                <Border BorderThickness="0.75" BorderBrush="Black" Padding="6,3" Background="White">
+                    <TextBlock Text="{Binding Message}" Foreground="{Binding Colour}"/>
+                </Border>
+            </Popup>
+        </StackPanel>
+    </StackPanel>
 
 </UserControl>

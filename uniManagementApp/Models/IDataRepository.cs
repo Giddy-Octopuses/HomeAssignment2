@@ -5,4 +5,7 @@ public interface IDataRepository
     ObservableCollection<Subject> Subjects { get; }
     ObservableCollection<Student> Students { get; }
     ObservableCollection<Teacher> Teachers { get; }
+
+    public void LoadData(string filepath);
+
 }

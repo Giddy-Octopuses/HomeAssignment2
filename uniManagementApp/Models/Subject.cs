@@ -5,7 +5,7 @@ namespace uniManagementApp.Models
 {
     public class Subject
     {
-        public int Id { get; private set; }
+        public int Id { get; init; }
         public string Name { get; set; }
         public string Description { get; set; }
         public int TeacherId { get; private set; }
@@ -22,6 +22,11 @@ namespace uniManagementApp.Models
             Description = description;
             TeacherId = teacherId;
             StudentsEnrolled = studentsEnrolled;
+        }   
+
+        public override string ToString()
+        {
+                return $"{Name}";
         }
     }
 }

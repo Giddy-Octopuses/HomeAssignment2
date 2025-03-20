@@ -6,52 +6,77 @@
       "Description": "Mathematics is the study of numbers, shapes and patterns.",
       "TeacherId": 1,
       "StudentsEnrolled": [
-        111222
-      ]
+        2
+      ],
+      "Teacher": null,
+      "Color": "#952DE8"
     },
     {
       "Id": 2,
-      "Name": "Physics",
-      "Description": "Physics is the study of matter, energy, and the fundamental forces of nature, exploring how they interact and govern the universe.",
+      "Name": "History",
+      "Description": "Study of the past \u0026 present \u0026 future",
+      "TeacherId": 1,
+      "StudentsEnrolled": null,
+      "Teacher": null,
+      "Color": "#2F61A8"
+    },
+    {
+      "Id": 3,
+      "Name": "German",
+      "Description": "German language \u003C3",
       "TeacherId": 2,
-      "StudentsEnrolled": []
+      "StudentsEnrolled": null,
+      "Teacher": null,
+      "Color": "#18FE00"
+    },
+    {
+      "Id": 4,
+      "Name": "English",
+      "Description": "English language",
+      "TeacherId": 2,
+      "StudentsEnrolled": null,
+      "Teacher": null,
+      "Color": "#B57100"
     }
   ],
   "Students": [
     {
-      "Id": 111222,
+      "Id": 1,
       "Name": "John",
       "Username": "john123",
       "Password": "uGZCxIdmsEtg/SoUKbdMVg==:bj5u+2ojAhprGYwAAU2YPDtsbi/TjKztos3lBnzt3Ao=",
       "EnrolledSubjects": [
-        1
+        3
       ]
     },
     {
-      "Id": 222111,
+      "Id": 2,
       "Name": "Jane",
       "Username": "jane123",
       "Password": "3et5M7RFyxTbtdAEa6RwYA==:+gxdTzOWFHW5luBwmXdw0Si82GvjtE/IPUoH64i9ReY=",
       "EnrolledSubjects": []
+
     }
   ],
   "Teachers": [
     {
-      "Id": 123456,
+      "Id": 1,
       "Name": "Mr. Smith",
       "Username": "smith123",
       "Password": "NIW+007DsVT+njlTpIx65Q==:gL+fCfpyB0MeKA119dGUsNsAEYImRCoKcD33ILC7tYk=",
       "Subjects": [
-        1
+        1,
+        2
       ]
     },
     {
-      "Id": 234567,
+      "Id": 2,
       "Name": "Mr. Nora",
       "Username": "nora123",
       "Password": "MO5D4hKg4DQLtAj3UFKasw==:c1XW7vi+qddsbHPTgBTQ+yXrW3ftUNsBoY8b/DIQ/m4=",
       "Subjects": [
-        2
+        3,
+        4
       ]
     }
   ]
