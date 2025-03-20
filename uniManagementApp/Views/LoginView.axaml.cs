@@ -5,24 +5,24 @@ using uniManagementApp.ViewModels;
 namespace uniManagementApp.Views;
 
 public partial class LoginView : UserControl
-    {
-        public LoginView()
-        {
-            InitializeComponent();
-        }
-
-        private void LoginButton_Click(object? sender, RoutedEventArgs e)
 {
-    if (DataContext is LoginViewModel vm)
+    public LoginView()
     {
-        vm.Username = UsernameTextBox?.Text ?? string.Empty;
-        vm.Password = PasswordTextBox?.Text ?? string.Empty;
-        vm.Login();
-        if (ErrorMessageTextBlock != null)
+        InitializeComponent();
+    }
+
+    private void LoginButton_Click(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is LoginViewModel vm)
         {
-            ErrorMessageTextBlock.Text = vm.ErrorMessage;
+            vm.Username = UsernameTextBox?.Text ?? string.Empty;
+            vm.Password = PasswordTextBox?.Text ?? string.Empty;
+            vm.Login();
+            if (ErrorMessageTextBlock != null)
+            {
+                ErrorMessageTextBlock.Text = vm.ErrorMessage;
+            }
         }
     }
-}
 
-    }
+}

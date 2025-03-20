@@ -163,23 +163,23 @@ namespace uniManagementApp.ViewModels
                 return;
             }
 
-            var id = SelectedSubject.Id;
-            _student.EnrolledSubjects?.Remove(id);
-            EnrolledSubjects.Remove(SelectedSubject);
+                    var id = SelectedSubject.Id;
+                    _student.EnrolledSubjects?.Remove(id);
+                    EnrolledSubjects.Remove(SelectedSubject);
 
-            var studentInRepo = dataRepo.Students?.FirstOrDefault(s => s.Id == _student.Id);
-            if (studentInRepo != null)
-            {
-                studentInRepo.EnrolledSubjects = new List<int>(_student.EnrolledSubjects ?? Enumerable.Empty<int>());
-            }
+                    var studentInRepo = dataRepo.Students?.FirstOrDefault(s => s.Id == _student.Id);
+                    if (studentInRepo != null)
+                    {
+                        studentInRepo.EnrolledSubjects = new List<int>(_student.EnrolledSubjects ?? Enumerable.Empty<int>());
+                    }
 
-            var subject = dataRepo.FindSubject(id);
-            if (subject?.StudentsEnrolled != null)
-            {
-                subject.StudentsEnrolled.Remove(_student.Id);
-            }
+                    var subject = dataRepo.FindSubject(id);
+                    if (subject?.StudentsEnrolled != null)
+                    {
+                        subject.StudentsEnrolled.Remove(_student.Id);
+                    }
 
-            dataRepo.SaveData(dataRepo.DataFilePath);
+                    dataRepo.SaveData(dataRepo.DataFilePath);
 
             RefreshAvailableSubjects();
             OnPropertyChanged(nameof(EnrolledSubjects));
@@ -198,4 +198,5 @@ namespace uniManagementApp.ViewModels
             return teacher?.Name ?? "Unknown Teacher";
         }
     }
+}
 }

@@ -195,7 +195,7 @@ namespace uniManagementApp.ViewModels
 
             SubjectAll.Add(new Subject(newId, NewSubjectName!, NewSubjectDescription!, Teacher.Id));
             _dataRepository.Subjects.Add(new Subject(newId, NewSubjectName!, NewSubjectDescription!, Teacher.Id));
-            Teacher.Subjects.Add(newId); 
+            Teacher.Subjects.Add(newId);
             var teacher = _dataRepository.Teachers.FirstOrDefault(t => t.Id == Teacher.Id);
             if (teacher != null)
             {
