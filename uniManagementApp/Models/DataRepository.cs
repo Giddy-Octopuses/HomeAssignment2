@@ -45,8 +45,6 @@ namespace uniManagementApp.Models
             }
         }
 
-
-       // FROM HASHING: public void SaveData( string filepath )
         public void SaveData(string DataFilePath)
         {
             try
@@ -56,7 +54,7 @@ namespace uniManagementApp.Models
                 JsonData.Teachers = new List<Teacher>(Teachers);
 
                 var json = JsonSerializer.Serialize(JsonData, new JsonSerializerOptions { WriteIndented = true });
-                File.WriteAllText(filepath, json);
+                File.WriteAllText(DataFilePath, json);
             }
             catch (Exception ex)
             {
@@ -108,8 +106,8 @@ namespace uniManagementApp.Models
             Subjects.Add(subject);
             SaveData(DataFilePath);
         }
+        
         // Move LoadSubjectById method inside the DataRepository class
-
         public Subject? LoadSubjectById(int subjectId)
         {
             foreach (var subject in Subjects)
