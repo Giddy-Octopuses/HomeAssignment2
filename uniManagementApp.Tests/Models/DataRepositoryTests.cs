@@ -11,13 +11,16 @@ namespace uniManagementApp.Tests
                                             ""Students"": [{ ""Id"": 1, ""Name"": ""John"", ""Username"": ""john123"", ""Password"": ""uGZCxIdmsEtg/SoUKbdMVg==:bj5u+2ojAhprGYwAAU2YPDtsbi/TjKztos3lBnzt3Ao="", ""EnrolledSubjects"": [1] }, { ""Id"": 2, ""Name"": ""Jane"", ""Username"": ""jane123"", ""Password"": ""3et5M7RFyxTbtdAEa6RwYA==:+gxdTzOWFHW5luBwmXdw0Si82GvjtE/IPUoH64i9ReY="", ""EnrolledSubjects"": [] }], 
                                             ""Teachers"": [{ ""Id"": 1, ""Name"": ""Mr. Smith"", ""Username"": ""smith123"", ""Password"": ""NIW+007DsVT+njlTpIx65Q==:gL+fCfpyB0MeKA119dGUsNsAEYImRCoKcD33ILC7tYk="", ""Subjects"": [1] }] }";
 
+        public DataRepositoryTests(){
+            var filePath = "test.json";
+            File.WriteAllText(filePath, ValidJson);
+        }
+
         [Fact]
         public void DataRepository_Constructor_ShouldSucceed()
         {
             // Arrange
             var dataRepository = new DataRepository();
-            var filePath = "test.json";
-            File.WriteAllText(filePath, ValidJson);
             dataRepository.LoadData(filePath);
             
             // Assert
@@ -30,20 +33,16 @@ namespace uniManagementApp.Tests
         public void DataRepository_SaveData_ShouldSucceed()
         {
             // Arrange
-            var dataRepository = new DataRepository();
-            var filePath = "test.json";
-            File.WriteAllText(filePath, ValidJson);
-            dataRepository.LoadData(filePath);
+            var dataRepository = new DataRepository("test.json");
 
             var newSubject = new Subject(2, "Physics", "Study of matter and energy", 2);
             dataRepository.Subjects.Add(newSubject);
 
             // Act
-            dataRepository.SaveData(filePath);
+            dataRepository.SaveData("test.json");
 
             // Read the file again to verify changes
-            var newDataRepository = new DataRepository();
-            newDataRepository.LoadData(filePath);
+            var newDataRepository = new DataRepository("test.json");
 
             // Assert
             var savedSubject = newDataRepository.Subjects.FirstOrDefault(s => s.Id == 2);
@@ -58,10 +57,7 @@ namespace uniManagementApp.Tests
         public void DataRepository_FindTeacher_ShouldSucceed()
         {
             // Arrange
-            var dataRepository = new DataRepository();
-            var filePath = "test.json";
-            File.WriteAllText(filePath, ValidJson);
-            dataRepository.LoadData(filePath);
+            var dataRepository = new DataRepository("test.json");
 
             var teacher = new Teacher(1, "John Doe", "johndoe", "password", []);
             dataRepository.Teachers.Add(teacher);
@@ -77,7 +73,7 @@ namespace uniManagementApp.Tests
         public void DataRepository_FindStudent_ShouldSucceed()
         {
             // Arrange
-            var dataRepository = new DataRepository();
+            var dataRepository = new DataRepository("test.json");
 
             // Act
             var foundStudent = dataRepository.FindStudent("john123", "john123");
@@ -90,7 +86,7 @@ namespace uniManagementApp.Tests
         public void DataRepository_FindSubject_ShouldSucceed()
         {
             // Arrange
-            var dataRepository = new DataRepository();
+            var dataRepository = new DataRepository("test.json");
 
             // Act
             var foundSubject = dataRepository.FindSubject(1);
@@ -105,13 +101,13 @@ namespace uniManagementApp.Tests
         public void DataRepository_SaveData_PersistsToFile() 
         {
             // Arrange
-            var dataRepository = new DataRepository();
+            var dataRepository = new DataRepository("test.json");
             var subject = new Subject(2, "Physics", "Physics", 1);
             dataRepository.Subjects.Add(subject);
 
             // Act
             dataRepository.SaveData("test.json");
-            var newRepository = new DataRepository();
+            var newRepository = new DataRepository("test.json");
 
             // Assert
             Assert.Contains(newRepository.Subjects, s => s.Id == subject.Id && s.Name == subject.Name);

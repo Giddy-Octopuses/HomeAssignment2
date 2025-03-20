@@ -16,8 +16,9 @@ namespace uniManagementApp.Models
         public ObservableCollection<Teacher> Teachers { get; private set; } = new();
         public JsonDataStructure JsonData { get; private set; } = new();
 
-        public DataRepository()
+        public DataRepository(string? dataFilePath = null)
         {
+            DataFilePath = dataFilePath ?? DataFilePath;
             LoadData(DataFilePath);
         }
 
@@ -45,7 +46,7 @@ namespace uniManagementApp.Models
             }
         }
 
-        public void SaveData(string DataFilePath)
+        public void SaveData(string filepath)
         {
             try
             {
@@ -54,7 +55,7 @@ namespace uniManagementApp.Models
                 JsonData.Teachers = new List<Teacher>(Teachers);
 
                 var json = JsonSerializer.Serialize(JsonData, new JsonSerializerOptions { WriteIndented = true });
-                File.WriteAllText(DataFilePath, json);
+                File.WriteAllText(filepath, json);
             }
             catch (Exception ex)
             {
