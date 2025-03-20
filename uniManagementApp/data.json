@@ -44,7 +44,7 @@
       "Id": 1,
       "Name": "John",
       "Username": "john123",
-      "Password": "john123",
+      "Password": "uGZCxIdmsEtg/SoUKbdMVg==:bj5u+2ojAhprGYwAAU2YPDtsbi/TjKztos3lBnzt3Ao=",
       "EnrolledSubjects": [
         3
       ]
@@ -53,11 +53,9 @@
       "Id": 2,
       "Name": "Jane",
       "Username": "jane123",
-      "Password": "jane123",
-      "EnrolledSubjects": [
-        2,
-        1
-      ]
+      "Password": "3et5M7RFyxTbtdAEa6RwYA==:+gxdTzOWFHW5luBwmXdw0Si82GvjtE/IPUoH64i9ReY=",
+      "EnrolledSubjects": []
+
     }
   ],
   "Teachers": [
@@ -65,7 +63,7 @@
       "Id": 1,
       "Name": "Mr. Smith",
       "Username": "smith123",
-      "Password": "smith123",
+      "Password": "NIW+007DsVT+njlTpIx65Q==:gL+fCfpyB0MeKA119dGUsNsAEYImRCoKcD33ILC7tYk=",
       "Subjects": [
         1,
         2
@@ -75,7 +73,7 @@
       "Id": 2,
       "Name": "Mr. Nora",
       "Username": "nora123",
-      "Password": "nora123",
+      "Password": "MO5D4hKg4DQLtAj3UFKasw==:c1XW7vi+qddsbHPTgBTQ+yXrW3ftUNsBoY8b/DIQ/m4=",
       "Subjects": [
         3,
         4

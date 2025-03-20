@@ -21,18 +21,17 @@ namespace uniManagementApp.Models
             LoadData(DataFilePath);
         }
 
-        public void LoadData(string DataFilePath)
-        // or: public void LoadData()   ?
+        public void LoadData( string filepath )
         {
             try
             {
-                if (!File.Exists(DataFilePath))
+                if (!File.Exists(filepath))
                 {
-                    Console.WriteLine($"Error: Data file not found at {DataFilePath}");
+                    Console.WriteLine($"Error: Data file not found at {filepath}");
                     return;
                 }
 
-                var json = File.ReadAllText(DataFilePath);
+                var json = File.ReadAllText(filepath);
                 JsonData = JsonSerializer.Deserialize<JsonDataStructure>(json) ?? new JsonDataStructure();
 
                 // Ensure collections are properly initialized
@@ -46,6 +45,8 @@ namespace uniManagementApp.Models
             }
         }
 
+
+       // FROM HASHING: public void SaveData( string filepath )
         public void SaveData(string DataFilePath)
         {
             try
@@ -55,7 +56,7 @@ namespace uniManagementApp.Models
                 JsonData.Teachers = new List<Teacher>(Teachers);
 
                 var json = JsonSerializer.Serialize(JsonData, new JsonSerializerOptions { WriteIndented = true });
-                File.WriteAllText(DataFilePath, json);
+                File.WriteAllText(filepath, json);
             }
             catch (Exception ex)
             {
@@ -67,7 +68,7 @@ namespace uniManagementApp.Models
         {
             foreach (Teacher teacher in Teachers)
             {
-                if (teacher.Username == username && teacher.Password == password)
+                if (teacher.Username == username && teacher.VerifyPassword(password))
                 {
                     return teacher;
                 }
@@ -79,7 +80,7 @@ namespace uniManagementApp.Models
         {
             foreach (Student student in Students)
             {
-                if (student.Username == username && student.Password == password)
+                if (student.Username == username && student.VerifyPassword(password))
                 {
                     return student;
                 }
@@ -99,6 +100,7 @@ namespace uniManagementApp.Models
             return null;
         }
 
+
         public void CreateSubject(Teacher teacher, Subject subject)
         {
             // Add subject to teacher
@@ -107,6 +109,7 @@ namespace uniManagementApp.Models
             SaveData(DataFilePath);
         }
         // Move LoadSubjectById method inside the DataRepository class
+
         public Subject? LoadSubjectById(int subjectId)
         {
             foreach (var subject in Subjects)
