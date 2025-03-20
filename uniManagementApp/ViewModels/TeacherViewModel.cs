@@ -110,14 +110,20 @@ namespace uniManagementApp.ViewModels
                 // Remove from view
                 SubjectAll.Remove(SelectedSubject);
 
-                // Remove from teacher's subjects
-                Teacher.Subjects?.Remove(IdToDelete);
-
-                // Remove from data repository
-                var subjectToRemove = _dataRepository.Subjects?.FirstOrDefault(s => s.Id == IdToDelete);
-                if (subjectToRemove != null)
+                // Remove from teacher's subjects (with null check)
+                if (Teacher.Subjects != null)
                 {
-                    _dataRepository.Subjects.Remove(subjectToRemove);
+                    Teacher.Subjects.Remove(IdToDelete);
+                }
+
+                // Remove from data repository (with null check)
+                if (_dataRepository.Subjects != null)
+                {
+                    var subjectToRemove = _dataRepository.Subjects.FirstOrDefault(s => s.Id == IdToDelete);
+                    if (subjectToRemove != null)
+                    {
+                        _dataRepository.Subjects.Remove(subjectToRemove);
+                    }
                 }
 
                 // Save changes
@@ -127,6 +133,7 @@ namespace uniManagementApp.ViewModels
                 await ShowPopup("Subject deleted successfully.", "Green");
             }
         }
+
 
         [RelayCommand]
         public void AddSubject()
