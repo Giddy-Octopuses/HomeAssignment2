@@ -1,11 +1,11 @@
 # HomeAssignment2
-username:password
-students
-john123: john123
-jane123: jane123
-teachers
-smith123: smith123
-nora123: nora123
+### Login Credentials
+#### Students
+- john123 : john123
+- jane123 : jane123
+#### Teachers
+- smith123 : smith123
+- nora123 : nora123
 ## 
 - Annalena: 
     - Login view
