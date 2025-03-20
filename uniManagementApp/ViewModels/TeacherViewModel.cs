@@ -9,9 +9,7 @@ using Avalonia.Controls;
 using System.Linq;
 using uniManagementApp.Models;
 using System.Collections.ObjectModel;
-using Avalonia.Controls.Primitives;
 using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations;
 
 namespace uniManagementApp.ViewModels
 {
@@ -19,17 +17,15 @@ namespace uniManagementApp.ViewModels
     {
         public Teacher Teacher { get; }
         private readonly DataRepository _dataRepository;
-        private Popup _popup;
 
         public TeacherViewModel(Teacher teacher)
         {
             Teacher = teacher;
             _dataRepository = new DataRepository();
-            SubjectAll = TurnSubjectIdIntoAll(Teacher.Subjects);
+            SubjectAll = TurnSubjectIdIntoAll(Teacher.Subjects ?? new List<int>()) ?? new ObservableCollection<Subject>();
         }
 
-        // These store the subjects with all their attributes.
-        public ObservableCollection<Subject> SubjectAll { get; }
+        public ObservableCollection<Subject> SubjectAll { get; } = new();
 
         public ObservableCollection<Subject>? TurnSubjectIdIntoAll(List<int> subjectIds)
         {
@@ -45,37 +41,27 @@ namespace uniManagementApp.ViewModels
             return subjectAll;
         }
 
-        [ObservableProperty]
-        private Subject? selectedSubject;
+        [ObservableProperty] private Subject? selectedSubject;
+        [ObservableProperty] private bool popupOpen;
+        [ObservableProperty] private bool popup2Open;
+        [ObservableProperty] private string message = string.Empty;
+        [ObservableProperty] private string colour = string.Empty;
+        [ObservableProperty] private bool popup3Open;
+        [ObservableProperty] private string message3 = string.Empty;
+        [ObservableProperty] private string colour3 = string.Empty;
+        [ObservableProperty] private bool editSubjectStackPanelVisible;
+        [ObservableProperty] private string? newSubjectName;
+        [ObservableProperty] private string? newSubjectDescription;
+        [ObservableProperty] private bool newSubjectStackPanelVisible;
 
-        [ObservableProperty]
-        private bool popupOpen;
-
-        [ObservableProperty]
-        private bool popup2Open;
-
-        [ObservableProperty]
-        private string message;
-
-        [ObservableProperty]
-        private string colour;
-
-        [ObservableProperty]
-        private bool popup3Open;
-
-        [ObservableProperty]
-        private string message3;
-
-        [ObservableProperty]
-        private string colour3;
-
-        public void SetPopup(Popup popup)
+        private async Task ShowPopup(string message, string colour, int duration = 3000)
         {
-            _popup = popup;
+            Message3 = message;
+            Colour3 = colour;
+            Popup3Open = true;
+            await Task.Delay(duration);
+            Popup3Open = false;
         }
-
-        [ObservableProperty]
-        private bool editSubjectStackPanelVisible;
 
         [RelayCommand]
         public void EditSubject()
@@ -84,92 +70,63 @@ namespace uniManagementApp.ViewModels
         }
 
         [RelayCommand]
-        public async void Save2() // Saving the edited subject.
+        public async Task Save2() // Saving the edited subject.
         {
-            if (string.IsNullOrWhiteSpace(SelectedSubject.Name) || string.IsNullOrWhiteSpace(SelectedSubject.Description))
+            if (SelectedSubject == null || string.IsNullOrWhiteSpace(SelectedSubject.Name) || string.IsNullOrWhiteSpace(SelectedSubject.Description))
             {
-                Message3 = "Error: Fill out both Name and Description.";
-                Colour3 = "Red";
-                Popup3Open = true;
-                await Task.Delay(3000);
-                Popup3Open = false;
+                await ShowPopup("Error: Fill out both Name and Description.", "Red");
                 return;
             }
 
-            // Find the subject in the SubjectAll collection and replace it with the edited data.
-            var subject = SubjectAll.FirstOrDefault(s => s.Id == SelectedSubject.Id);
-            if (subject != null)
+            var subjectInAll = SubjectAll.FirstOrDefault(s => s.Id == SelectedSubject.Id);
+            if (subjectInAll != null)
             {
-                var updatedSubject = new Subject(subject.Id, SelectedSubject.Name, SelectedSubject.Description, subject.TeacherId, subject.StudentsEnrolled);
-                SubjectAll.Replace(subject, updatedSubject);
-            }
+                // Update the subject in SubjectAll.
+                subjectInAll.Name = SelectedSubject.Name;
+                subjectInAll.Description = SelectedSubject.Description;
 
-            // Delete every subject from _dataRepository.Subjects that are in SubjectAll.
-            foreach (var subj in SubjectAll)
-            {
-                var repoSubject = _dataRepository.Subjects.FirstOrDefault(s => s.Id == subj.Id);
+                // Update the subject in _dataRepository.Subjects.
+                var repoSubject = _dataRepository.Subjects?.FirstOrDefault(s => s.Id == SelectedSubject.Id);
                 if (repoSubject != null)
                 {
-                    _dataRepository.Subjects.Remove(repoSubject);
+                    repoSubject.Name = SelectedSubject.Name;
+                    repoSubject.Description = SelectedSubject.Description;
                 }
+
+                _dataRepository.SaveData("data.json");
+
+                EditSubjectStackPanelVisible = false;
+                await ShowPopup("The subject was edited successfully.", "Green");
             }
-
-            // Put every subject of SubjectAll back to _dataRepository.Subjects --> the updated subjects will show in datarepository.
-            foreach (var subj in SubjectAll)
-            {
-                _dataRepository.Subjects.Add(subj);
-            }
-
-            // Order the subjects by id, so they are in the original order.
-            var orderedSubjects = new ObservableCollection<Subject>(_dataRepository.Subjects.OrderBy(s => s.Id));
-            _dataRepository.Subjects = orderedSubjects;
-
-            _dataRepository.SaveData("data.json");
-
-            EditSubjectStackPanelVisible = false;
-
-            Message3 = "The subject was edited successfully.";
-            Colour3 = "Green";
-            Popup3Open = true;
-            await Task.Delay(3000);
-            Popup3Open = false;
         }
 
         [RelayCommand]
-        public async void DeleteSubject()
+        public async Task DeleteSubject()
         {
             if (SelectedSubject != null)
             {
                 int IdToDelete = SelectedSubject.Id;
-                Subject SubjectToDelete = SelectedSubject;
 
+                // Remove from view
                 SubjectAll.Remove(SelectedSubject);
-                Teacher.Subjects.Remove(IdToDelete);
-                _dataRepository.Subjects.Remove(SubjectToDelete);
-                var teacher = _dataRepository.Teachers.FirstOrDefault(t => t.Id == Teacher.Id);
-                if (teacher != null)
-                {
-                    teacher.Subjects.Remove(IdToDelete);
-                }
-                SelectedSubject = null;
 
+                // Remove from teacher's subjects
+                Teacher.Subjects?.Remove(IdToDelete);
+
+                // Remove from data repository
+                var subjectToRemove = _dataRepository.Subjects?.FirstOrDefault(s => s.Id == IdToDelete);
+                if (subjectToRemove != null)
+                {
+                    _dataRepository.Subjects.Remove(subjectToRemove);
+                }
+
+                // Save changes
+                SelectedSubject = null;
                 _dataRepository.SaveData("data.json");
 
-                // Show the popup for 3 seconds
-                PopupOpen = true;
-                await Task.Delay(3000);
-                PopupOpen = false;
+                await ShowPopup("Subject deleted successfully.", "Green");
             }
         }
-
-        [ObservableProperty]
-        private string? newSubjectName;
-
-        [ObservableProperty]
-        private string? newSubjectDescription;
-
-        [ObservableProperty]
-        private bool newSubjectStackPanelVisible;
 
         [RelayCommand]
         public void AddSubject()
@@ -178,53 +135,43 @@ namespace uniManagementApp.ViewModels
         }
 
         [RelayCommand]
-        public async void Save()
+        public async Task Save()
         {
             if (string.IsNullOrWhiteSpace(NewSubjectName) || string.IsNullOrWhiteSpace(NewSubjectDescription))
             {
-                Message = "Error: Fill out both Name and Description.";
-                Colour = "Red";
-                Popup2Open = true;
-                await Task.Delay(3000);
-                Popup2Open = false;
+                await ShowPopup("Error: Fill out both Name and Description.", "Red");
                 return;
             }
 
             // Find the maximum existing ID and add 1 to it.
-            int newId = _dataRepository.Subjects.Any() ? _dataRepository.Subjects.Max(s => s.Id) + 1 : 1;
+            int newId = _dataRepository.Subjects?.Any() == true ? _dataRepository.Subjects.Max(s => s.Id) + 1 : 1;
 
-            SubjectAll.Add(new Subject(newId, NewSubjectName!, NewSubjectDescription!, Teacher.Id));
-            _dataRepository.Subjects.Add(new Subject(newId, NewSubjectName!, NewSubjectDescription!, Teacher.Id));
-            Teacher.Subjects.Add(newId);
-            var teacher = _dataRepository.Teachers.FirstOrDefault(t => t.Id == Teacher.Id);
-            if (teacher != null)
-            {
-                teacher.Subjects.Add(newId);
-            }
+            var newSubject = new Subject(newId, NewSubjectName!, NewSubjectDescription!, Teacher.Id);
+            SubjectAll.Add(newSubject);
+            _dataRepository.Subjects?.Add(newSubject);
+            Teacher.Subjects?.Add(newId);
 
-            NewSubjectName = NewSubjectDescription = null;
+            var teacher = _dataRepository.Teachers?.FirstOrDefault(t => t.Id == Teacher.Id);
+            teacher?.Subjects?.Add(newId);
 
             _dataRepository.SaveData("data.json");
 
+            NewSubjectName = NewSubjectDescription = null;
             NewSubjectStackPanelVisible = false;
 
-            Message = "The subject was saved successfully.";
-            Colour = "Green";
-            Popup2Open = true;
-            await Task.Delay(3000);
-            Popup2Open = false;
+            await ShowPopup("The subject was saved successfully.", "Green");
         }
     }
 
     // Used to determine whether a subject was selected from the listbox.
     public class NullToBoolConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             return value != null;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }

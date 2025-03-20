@@ -111,6 +111,7 @@ namespace uniManagementApp.Models
         public void CreateSubject(Teacher teacher, Subject subject)
         {
             // Add subject to teacher
+            teacher.Subjects ??= new List<int>();
             teacher.Subjects.Add(subject.Id);
             Subjects.Add(subject);
             SaveData(DataFilePath);

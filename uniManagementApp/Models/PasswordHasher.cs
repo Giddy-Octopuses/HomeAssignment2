@@ -11,18 +11,16 @@ public static class PasswordHasher
 
     public static string HashPassword(string password)
     {
-        using (var rng = new RNGCryptoServiceProvider())
-        {
-            byte[] salt = new byte[SaltSize];
-            rng.GetBytes(salt);
+        byte[] salt = new byte[SaltSize];
+        RandomNumberGenerator.Fill(salt);
 
-            using (var pbkdf2 = new Rfc2898DeriveBytes(password, salt, Iterations, HashAlgorithmName.SHA256))
-            {
-                byte[] key = pbkdf2.GetBytes(KeySize);
-                return $"{Convert.ToBase64String(salt)}:{Convert.ToBase64String(key)}";
-            }
+        using (var pbkdf2 = new Rfc2898DeriveBytes(password, salt, Iterations, HashAlgorithmName.SHA256))
+        {
+            byte[] key = pbkdf2.GetBytes(KeySize);
+            return $"{Convert.ToBase64String(salt)}:{Convert.ToBase64String(key)}";
         }
     }
+
 
     public static bool VerifyPassword(string enteredPassword, string storedHash)
     {

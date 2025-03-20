@@ -20,7 +20,7 @@ namespace uniManagementApp.ViewModels
     {
         private readonly DataRepository dataRepo = new DataRepository();
         private readonly Student _student;
-        private Popup _popup;
+        private Popup _popup = new Popup(); // Default value to prevent null
 
         public ObservableCollection<Subject> EnrolledSubjects { get; }
         public ObservableCollection<Subject> AvailableSubjects { get; }
@@ -51,16 +51,16 @@ namespace uniManagementApp.ViewModels
         private bool popupEnrollOpen;
 
         [ObservableProperty]
-        private string messageDrop;
+        private string messageDrop = string.Empty;  // Default value
 
         [ObservableProperty]
-        private string colourDrop;
+        private string colourDrop = string.Empty;  // Default value
 
         [ObservableProperty]
-        private string messageEnroll;
+        private string messageEnroll = string.Empty;  // Default value
 
         [ObservableProperty]
-        private string colourEnroll;
+        private string colourEnroll = string.Empty;  // Default value
 
         public void SetPopup(Popup popup)
         {
@@ -108,7 +108,7 @@ namespace uniManagementApp.ViewModels
         }
 
         [RelayCommand]
-        public async void EnrollSubject()
+        public async Task EnrollSubject()  // Fix: Changed async void to async Task
         {
             if (_student == null || SelectedSubject == null || EnrolledSubjects.Any(s => s.Id == SelectedSubject.Id))
             {
@@ -151,7 +151,7 @@ namespace uniManagementApp.ViewModels
         }
 
         [RelayCommand]
-        public async void DropSubject()
+        public async Task DropSubject()  // Fix: Changed async void to async Task
         {
             if (_student == null || SelectedSubject == null || !EnrolledSubjects.Any(s => s.Id == SelectedSubject.Id))
             {
@@ -163,23 +163,23 @@ namespace uniManagementApp.ViewModels
                 return;
             }
 
-                    var id = SelectedSubject.Id;
-                    _student.EnrolledSubjects?.Remove(id);
-                    EnrolledSubjects.Remove(SelectedSubject);
+            var id = SelectedSubject.Id;
+            _student.EnrolledSubjects?.Remove(id);
+            EnrolledSubjects.Remove(SelectedSubject);
 
-                    var studentInRepo = dataRepo.Students?.FirstOrDefault(s => s.Id == _student.Id);
-                    if (studentInRepo != null)
-                    {
-                        studentInRepo.EnrolledSubjects = new List<int>(_student.EnrolledSubjects ?? Enumerable.Empty<int>());
-                    }
+            var studentInRepo = dataRepo.Students?.FirstOrDefault(s => s.Id == _student.Id);
+            if (studentInRepo != null)
+            {
+                studentInRepo.EnrolledSubjects = new List<int>(_student.EnrolledSubjects ?? Enumerable.Empty<int>());
+            }
 
-                    var subject = dataRepo.FindSubject(id);
-                    if (subject?.StudentsEnrolled != null)
-                    {
-                        subject.StudentsEnrolled.Remove(_student.Id);
-                    }
+            var subject = dataRepo.FindSubject(id);
+            if (subject?.StudentsEnrolled != null)
+            {
+                subject.StudentsEnrolled.Remove(_student.Id);
+            }
 
-                    dataRepo.SaveData(dataRepo.DataFilePath);
+            dataRepo.SaveData(dataRepo.DataFilePath);
 
             RefreshAvailableSubjects();
             OnPropertyChanged(nameof(EnrolledSubjects));
@@ -191,6 +191,7 @@ namespace uniManagementApp.ViewModels
             await Task.Delay(3000);
             PopupDropOpen = false;
         }
+
 
         private string GetTeacherName(int teacherId)
         {

@@ -1,16 +1,12 @@
-using System.Collections.Generic;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
-using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
-using uniManagementApp.Models;
 using uniManagementApp.ViewModels;
 
 namespace uniManagementApp.Views;
 
 public partial class TeacherView : UserControl
 {
-    private Popup popup;
+    private Popup? popup;
 
     public TeacherView()
     {
@@ -18,9 +14,10 @@ public partial class TeacherView : UserControl
         popup = this.FindControl<Popup>("Popup");
 
         var viewModel = DataContext as TeacherViewModel;
-        if (viewModel != null)
+        if (viewModel != null && popup != null)
         {
-            viewModel.SetPopup(popup);
+            // No need for SetPopup if it's not used anymore
+            // viewModel.SetPopup(popup);
         }
     }
 }
