@@ -6,65 +6,62 @@ namespace uniManagementApp.Tests
 {
     public class DataRepositoryTests
     {
-        // redo with IDataRepository
-        private readonly ITestOutputHelper _output;
-
-        public DataRepositoryTests(ITestOutputHelper output)
-        {
-            _output = output; // Inject xUnit output helper
-        }
+        private const string ValidJson = @"{ ""Subjects"": [{ ""Id"": 1, ""Name"": ""Math"", ""Description"": ""Mathematics is the study of numbers, shapes and patterns."", ""TeacherId"": 1, ""StudentsEnrolled"": [1] }], 
+                                            ""Students"": [{ ""Id"": 1, ""Name"": ""John"", ""Username"": ""john123"", ""Password"": ""uGZCxIdmsEtg/SoUKbdMVg==:bj5u+2ojAhprGYwAAU2YPDtsbi/TjKztos3lBnzt3Ao="", ""EnrolledSubjects"": [1] }, { ""Id"": 2, ""Name"": ""Jane"", ""Username"": ""jane123"", ""Password"": ""3et5M7RFyxTbtdAEa6RwYA==:+gxdTzOWFHW5luBwmXdw0Si82GvjtE/IPUoH64i9ReY="", ""EnrolledSubjects"": [] }], 
+                                            ""Teachers"": [{ ""Id"": 1, ""Name"": ""Mr. Smith"", ""Username"": ""smith123"", ""Password"": ""NIW+007DsVT+njlTpIx65Q==:gL+fCfpyB0MeKA119dGUsNsAEYImRCoKcD33ILC7tYk="", ""Subjects"": [1] }] }";
 
         [Fact]
-        public void DataRepository_Constructor()
+        public void DataRepository_Constructor_ShouldSucceed()
         {
             // Arrange
             var dataRepository = new DataRepository();
+            var filePath = "test.json";
+            File.WriteAllText(filePath, ValidJson);
+            dataRepository.LoadData(filePath);
             
             // Assert
             Assert.NotNull(dataRepository.Subjects);
             Assert.NotNull(dataRepository.Students);
             Assert.NotNull(dataRepository.Teachers);
-
-            // Display the lists
-            _output.WriteLine("Subjects:");
-            foreach (var subject in dataRepository.Subjects)
-            {
-                _output.WriteLine($" - {subject.Name}");
-            }
-
-            _output.WriteLine("Students:");
-            foreach (var student in dataRepository.Students)
-            {
-                _output.WriteLine($" - {student.Name}");
-            }
-
-            _output.WriteLine("Teachers:");
-            foreach (var teacher in dataRepository.Teachers)
-            {
-                _output.WriteLine($" - {teacher.Subjects[0]}");
-            }
         }
 
         [Fact]
-        public void DataRepository_SaveData()
+        public void DataRepository_SaveData_ShouldSucceed()
         {
             // Arrange
             var dataRepository = new DataRepository();
-            var subject = new Subject(1, "Math", "Mathematics", 1);
-            dataRepository.Subjects.Add(subject);
+            var filePath = "test.json";
+            File.WriteAllText(filePath, ValidJson);
+            dataRepository.LoadData(filePath);
+
+            var newSubject = new Subject(2, "Physics", "Study of matter and energy", 2);
+            dataRepository.Subjects.Add(newSubject);
 
             // Act
-            dataRepository.SaveData();
+            dataRepository.SaveData(filePath);
+
+            // Read the file again to verify changes
+            var newDataRepository = new DataRepository();
+            newDataRepository.LoadData(filePath);
 
             // Assert
-            Assert.Contains(subject, dataRepository.Subjects);
+            var savedSubject = newDataRepository.Subjects.FirstOrDefault(s => s.Id == 2);
+            Assert.NotNull(savedSubject);
+            Assert.Equal("Physics", savedSubject.Name);
+            Assert.Equal("Study of matter and energy", savedSubject.Description);
+            Assert.Equal(2, savedSubject.TeacherId);
+            
         }
 
         [Fact]
-        public void DataRepository_FindTeacher()
+        public void DataRepository_FindTeacher_ShouldSucceed()
         {
             // Arrange
             var dataRepository = new DataRepository();
+            var filePath = "test.json";
+            File.WriteAllText(filePath, ValidJson);
+            dataRepository.LoadData(filePath);
+
             var teacher = new Teacher(1, "John Doe", "johndoe", "password", []);
             dataRepository.Teachers.Add(teacher);
 
@@ -76,7 +73,7 @@ namespace uniManagementApp.Tests
         }   
 
         [Fact]
-        public void DataRepository_FindStudent()
+        public void DataRepository_FindStudent_ShouldSucceed()
         {
             // Arrange
             var dataRepository = new DataRepository();
@@ -89,7 +86,7 @@ namespace uniManagementApp.Tests
         }
 
         [Fact]
-        public void DataRepository_FindSubject()
+        public void DataRepository_FindSubject_ShouldSucceed()
         {
             // Arrange
             var dataRepository = new DataRepository();
@@ -101,13 +98,42 @@ namespace uniManagementApp.Tests
             Assert.Equal(foundSubject, dataRepository.Subjects[0]);
         }
 
+
+// Data persistence tests
         [Fact]
-        public void DataRepository_CreateSubject()
+        public void DataRepository_SaveData_PersistsToFile() 
         {
             // Arrange
+            var dataRepository = new DataRepository();
+            var subject = new Subject(1, "Math", "Mathematics", 1);
+            dataRepository.Subjects.Add(subject);
+
             // Act
+            dataRepository.SaveData("test.json");
+
+            // Create a new instance to simulate restarting the app
+            var newRepository = new DataRepository();
+
             // Assert
+            Assert.Contains(newRepository.Subjects, s => s.Id == subject.Id && s.Name == subject.Name);
         }
+
+        [Fact]
+        public void DataRepository_LoadData_RestoresPreviousState()
+        {
+            // Arrange
+            var dataRepository = new DataRepository();
+            var teacher = new Teacher(1, "Alice Smith", "alice123", "password", []);
+            dataRepository.Teachers.Add(teacher);
+            dataRepository.SaveData("test.json");
+
+            // Act
+            var reloadedRepository = new DataRepository();
+
+            // Assert
+            Assert.Contains(reloadedRepository.Teachers, t => t.Username == "alice123" && t.Name == "Alice Smith");
+        }
+
         
     }
 }
