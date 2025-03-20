@@ -104,8 +104,6 @@ namespace uniManagementApp.ViewModels
                 SubjectAll.Replace(subject, updatedSubject);
             }
 
-            // MISSING: also edit in AvailableSubjects for students
-
             // Delete every subject from _dataRepository.Subjects that are in SubjectAll.
             foreach (var subj in SubjectAll)
             {
@@ -153,7 +151,6 @@ namespace uniManagementApp.ViewModels
                 {
                     teacher.Subjects.Remove(IdToDelete);
                 }
-                // MISSING: also remove from AvailableSubjects for students
                 SelectedSubject = null;
 
                 _dataRepository.SaveData();
@@ -205,7 +202,6 @@ namespace uniManagementApp.ViewModels
                 teacher.Subjects.Add(newId);
             }
 
-            // MISSING: also add to AvailableSubjects for students
             NewSubjectName = NewSubjectDescription = null;
 
             _dataRepository.SaveData();
