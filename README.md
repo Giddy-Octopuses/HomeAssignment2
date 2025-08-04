@@ -1,5 +1,8 @@
-# HomeAssignment2
+# Advanced OOP – Home Assignment 2
 
+- University Management Application
+- Assignment Duration: 2 weeks
+- Contributors: Annalena, Emma, Gabija
 
 ### Login Credentials
 
@@ -12,24 +15,33 @@
 - smith123 : smith123
 - nora123 : nora123
 
+### Functional Requirements
 
-## Splitting the work
+#### Student Use Cases
+- Enroll in a Subject 
+  
+    -- Subject moves to Enrolled Subjects
 
-- Annalena: 
-    - Login view
-    - set up JSON
-    - set up tests
-    - hashing
-    - merging
-- Gabija:
-    - Student view
-    - set up tests
-    - merging
-- Emma:
-    - Teacher view  
-    - set up tests   
-    - merging   
+    --- Confirmation message shown
 
+- Drop a Subject 
+  
+    -- Subject returns to Available Subjects
+
+    --- Confirmation message shown
+
+#### Teacher Use Cases
+- Create a Subject 
+  
+    -- Subject appears in both My Subjects and Available Subjects
+  
+    --- Confirmation message shown
+  
+- Delete a Subject 
+  
+    -- Subject removed from both My Subjects and Available Subjects
+  
+    --- Confirmation message shown
 
 ##### Functional Testing Documentation
 
